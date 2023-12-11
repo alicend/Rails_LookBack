@@ -1,0 +1,29 @@
+{
+  "cSpell.words": [
+    "alicend",
+    "clickaway",
+    "DBNAME",
+    "godotenv",
+    "gomock",
+    "gonic",
+    "gorm",
+    "joho",
+    "lookback",
+    "loolback",
+    "ozzo",
+    "reduxjs",
+    "resendlabs",
+    "RESTAPI",
+    "signup",
+    "stretchr",
+    "testid"
+  ],
+
+  // Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  // ESLint
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  }
+}
