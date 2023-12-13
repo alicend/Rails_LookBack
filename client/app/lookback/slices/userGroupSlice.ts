@@ -16,7 +16,7 @@ const handleHttpError = (err: any, thunkAPI: any) => {
 };
 
 // APIエンドポイントの定義
-const ENDPOINTS = `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/user-groups`;
+const ENDPOINTS = `${process.env.NEXT_PUBLIC_RESTAPI_URL}user-groups`;
 
 export const fetchAsyncCreateUserGroup = createAsyncThunk(
   "user-groups/create",

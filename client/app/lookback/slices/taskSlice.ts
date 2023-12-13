@@ -29,9 +29,9 @@ const handleHttpError = (err: any, thunkAPI: any) => {
 
 // APIエンドポイントの定義
 const ENDPOINTS = {
-  TASKS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/tasks`,
-  USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/users`,
-  CATEGORY: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/categories`,
+  TASKS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}tasks`,
+  USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}users`,
+  CATEGORY: `${process.env.NEXT_PUBLIC_RESTAPI_URL}categories`,
 };
 
 export const fetchAsyncGetTaskBoardTasks = createAsyncThunk(

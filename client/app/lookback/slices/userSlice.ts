@@ -22,13 +22,13 @@ const handleHttpError = (err: any, thunkAPI: any) => {
 
 // APIエンドポイントの定義
 const ENDPOINTS = {
-  LOGIN: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/login`,
-  LOGOUT: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/logout`,
-  REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/signup`,
-  REGISTER_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/signup/request`,
-  INVITE_REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/invite/signup`,
-  INVITE_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/auth/invite/request`,
-  USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}api/users`,
+  LOGIN: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/login`,
+  LOGOUT: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/logout`,
+  REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/signup`,
+  REGISTER_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/signup/request`,
+  INVITE_REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/invite/signup`,
+  INVITE_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/invite/request`,
+  USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}users`,
 };
 
 export const fetchAsyncGuestLogin = createAsyncThunk(
