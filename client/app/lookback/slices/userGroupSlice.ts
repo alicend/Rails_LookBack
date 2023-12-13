@@ -4,13 +4,7 @@ import { RootState } from "@/store/store";
 import { PAYLOAD } from "@/types/ResponseType";
 import router from "next/router";
 import { USER_GROUP, USER_GROUP_STATE } from "@/types/UserGroupType";
-
-// 共通のHTTPヘッダー
-const COMMON_HTTP_HEADER = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
+import { COMMON_HTTP_HEADER } from "@/constants";
 
 // 共通のエラーハンドラ
 const handleHttpError = (err: any, thunkAPI: any) => {

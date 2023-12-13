@@ -10,13 +10,7 @@ import {
 } from "@/types/UserType";
 import { PAYLOAD } from "@/types/ResponseType";
 import router from "next/router";
-
-// 共通のHTTPヘッダー
-const COMMON_HTTP_HEADER = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
+import { COMMON_HTTP_HEADER } from "@/constants";
 
 // 共通のエラーハンドラ
 const handleHttpError = (err: any, thunkAPI: any) => {

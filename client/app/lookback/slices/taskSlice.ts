@@ -16,13 +16,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import router from "next/router";
 import { PAYLOAD } from "@/types/ResponseType";
-
-// 共通のHTTPヘッダー
-const COMMON_HTTP_HEADER = {
-  headers: {
-    "Content-Type": "application/json",
-  },
-};
+import { COMMON_HTTP_HEADER } from "@/constants";
 
 // 共通のエラーハンドラ
 const handleHttpError = (err: any, thunkAPI: any) => {
