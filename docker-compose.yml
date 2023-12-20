@@ -31,7 +31,7 @@ services:
     build:
       context: ./api
       dockerfile: Dockerfile
-    command: bash -c "bundle exec rails s -b '0.0.0.0'"
+    command: bash -c "tail -f log/development.log"
     volumes:
       - ./api:/myapp
     ports:
