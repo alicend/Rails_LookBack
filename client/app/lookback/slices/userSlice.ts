@@ -22,12 +22,12 @@ const handleHttpError = (err: any, thunkAPI: any) => {
 
 // APIエンドポイントの定義
 const ENDPOINTS = {
-  LOGIN: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/login`,
-  LOGOUT: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/logout`,
-  REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/signup`,
-  REGISTER_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/signup/request`,
-  INVITE_REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/invite/signup`,
-  INVITE_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}auth/invite/request`,
+  LOGIN: `${process.env.NEXT_PUBLIC_RESTAPI_URL}login`,
+  LOGOUT: `${process.env.NEXT_PUBLIC_RESTAPI_URL}logout`,
+  REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}signup`,
+  REGISTER_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}signup/request`,
+  INVITE_REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}invite/signup`,
+  INVITE_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}invite/request`,
   USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}users`,
 };
 
@@ -37,14 +37,14 @@ export const fetchAsyncGuestLogin = createAsyncThunk(
     try {
       const res = await axios.get(
         `${ENDPOINTS.LOGIN}/guest`,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/task-board");
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncLogin = createAsyncThunk(
@@ -57,7 +57,7 @@ export const fetchAsyncLogin = createAsyncThunk(
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncLogout = createAsyncThunk(
@@ -70,7 +70,7 @@ export const fetchAsyncLogout = createAsyncThunk(
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncRegisterRequest = createAsyncThunk(
@@ -80,32 +80,32 @@ export const fetchAsyncRegisterRequest = createAsyncThunk(
       const res = await axios.post(
         ENDPOINTS.REGISTER_REQUEST,
         { email: email },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncInviteRequest = createAsyncThunk(
   "auth/invite/request",
   async (
     { email, userGroupID }: { email: string; userGroupID: number },
-    thunkAPI,
+    thunkAPI
   ) => {
     try {
       const res = await axios.post(
         ENDPOINTS.INVITE_REQUEST,
         { email: email, userGroupID: userGroupID },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncRegister = createAsyncThunk(
@@ -115,14 +115,14 @@ export const fetchAsyncRegister = createAsyncThunk(
       const res = await axios.post(
         ENDPOINTS.REGISTER,
         auth,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/");
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncInviteRegister = createAsyncThunk(
@@ -132,14 +132,14 @@ export const fetchAsyncInviteRegister = createAsyncThunk(
       const res = await axios.post(
         ENDPOINTS.INVITE_REGISTER,
         auth,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/");
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncGetLoginUser = createAsyncThunk(
@@ -151,7 +151,7 @@ export const fetchAsyncGetLoginUser = createAsyncThunk(
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncUpdateLoginUserEmail = createAsyncThunk(
@@ -161,13 +161,13 @@ export const fetchAsyncUpdateLoginUserEmail = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/me/email/request`,
         { email: email },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncUpdateCompleteLoginUserEmail = createAsyncThunk(
@@ -177,14 +177,14 @@ export const fetchAsyncUpdateCompleteLoginUserEmail = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/me/email`,
         { email: email },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/");
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncUpdateLoginUsername = createAsyncThunk(
@@ -194,13 +194,13 @@ export const fetchAsyncUpdateLoginUsername = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/me/name`,
         { username: username },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncUpdateLoginUserPassword = createAsyncThunk(
@@ -210,13 +210,13 @@ export const fetchAsyncUpdateLoginUserPassword = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/me/password`,
         passwords,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncResetPasswordRequest = createAsyncThunk(
@@ -226,13 +226,13 @@ export const fetchAsyncResetPasswordRequest = createAsyncThunk(
       const res = await axios.post(
         `${ENDPOINTS.USERS}/password/request`,
         { email: email },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncResetPassword = createAsyncThunk(
@@ -242,14 +242,14 @@ export const fetchAsyncResetPassword = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/password`,
         reset,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/");
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncUpdateUserGroup = createAsyncThunk(
@@ -259,13 +259,13 @@ export const fetchAsyncUpdateUserGroup = createAsyncThunk(
       const res = await axios.put(
         `${ENDPOINTS.USERS}/me/user-group`,
         { userGroup: userGroup },
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       return res.data.user_groups;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 export const fetchAsyncDeleteLoginUser = createAsyncThunk(
@@ -274,14 +274,14 @@ export const fetchAsyncDeleteLoginUser = createAsyncThunk(
     try {
       const res = await axios.delete(
         `${ENDPOINTS.USERS}/me`,
-        COMMON_HTTP_HEADER,
+        COMMON_HTTP_HEADER
       );
       await router.push("/");
       return res.data.user;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
     }
-  },
+  }
 );
 
 const initialState: USER_STATE = {
@@ -341,7 +341,7 @@ export const userSlice = createSlice({
     },
     editUserStatus(
       state,
-      action: PayloadAction<"" | "loading" | "succeeded" | "failed">,
+      action: PayloadAction<"" | "loading" | "succeeded" | "failed">
     ) {
       state.status = action.payload;
     },
@@ -355,7 +355,7 @@ export const userSlice = createSlice({
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
         state.message = "ログインに成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncGuestLogin.rejected, handleLoginError);
     builder.addCase(fetchAsyncGuestLogin.pending, handleLoading);
@@ -364,7 +364,7 @@ export const userSlice = createSlice({
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
         state.message = "ログインに成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncLogin.rejected, handleLoginError);
     builder.addCase(fetchAsyncLogin.pending, handleLoading);
@@ -374,7 +374,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ログアウトしました";
-      },
+      }
     );
     builder.addCase(fetchAsyncLogout.rejected, handleLoginError);
     builder.addCase(fetchAsyncLogout.pending, handleLoading);
@@ -384,7 +384,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "メールを送信しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncRegisterRequest.rejected, handleLoginError);
     builder.addCase(fetchAsyncRegisterRequest.pending, handleLoading);
@@ -394,7 +394,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "メールを送信しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncInviteRequest.rejected, handleLoginError);
     builder.addCase(fetchAsyncInviteRequest.pending, handleLoading);
@@ -404,7 +404,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ユーザーの登録に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncRegister.rejected, handleLoginError);
     builder.addCase(fetchAsyncRegister.pending, handleLoading);
@@ -415,7 +415,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ユーザーの登録に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncInviteRegister.rejected, handleLoginError);
     builder.addCase(fetchAsyncInviteRegister.pending, handleLoading);
@@ -423,7 +423,7 @@ export const userSlice = createSlice({
       fetchAsyncGetLoginUser.fulfilled,
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
-      },
+      }
     );
     builder.addCase(fetchAsyncGetLoginUser.rejected, handleError);
     builder.addCase(fetchAsyncGetLoginUser.pending, handleLoading);
@@ -433,7 +433,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "メールを送信しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncUpdateLoginUserEmail.rejected, handleError);
     builder.addCase(fetchAsyncUpdateLoginUserEmail.pending, handleLoading);
@@ -443,15 +443,15 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "メールの更新に完了しました";
-      },
+      }
     );
     builder.addCase(
       fetchAsyncUpdateCompleteLoginUserEmail.rejected,
-      handleError,
+      handleError
     );
     builder.addCase(
       fetchAsyncUpdateCompleteLoginUserEmail.pending,
-      handleLoading,
+      handleLoading
     );
     builder.addCase(
       fetchAsyncUpdateLoginUsername.fulfilled,
@@ -459,7 +459,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ユーザー名の更新に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncUpdateLoginUsername.rejected, handleError);
     builder.addCase(fetchAsyncUpdateLoginUsername.pending, handleLoading);
@@ -469,7 +469,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "パスワードの更新に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncUpdateLoginUserPassword.rejected, handleError);
     builder.addCase(fetchAsyncUpdateLoginUserPassword.pending, handleLoading);
@@ -479,7 +479,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "メールを送信しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncResetPasswordRequest.rejected, handleError);
     builder.addCase(fetchAsyncResetPasswordRequest.pending, handleLoading);
@@ -489,7 +489,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "パスワードをリセットしました";
-      },
+      }
     );
     builder.addCase(fetchAsyncResetPassword.rejected, handleError);
     builder.addCase(fetchAsyncResetPassword.pending, handleLoading);
@@ -499,7 +499,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ユーザーグループの更新に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncUpdateUserGroup.rejected, handleError);
     builder.addCase(fetchAsyncUpdateUserGroup.pending, handleLoading);
@@ -509,7 +509,7 @@ export const userSlice = createSlice({
         state.status = "succeeded";
         state.loginUser = action.payload;
         state.message = "ユーザーの削除に成功しました";
-      },
+      }
     );
     builder.addCase(fetchAsyncDeleteLoginUser.rejected, handleError);
     builder.addCase(fetchAsyncDeleteLoginUser.pending, handleLoading);

@@ -18,6 +18,12 @@ gem "puma", "~> 5.0"
 # cors設定を管理する
 gem "rack-cors"
 
+# メールSDK
+gem "resend", "~> 0.8.0"
+
+# JWT
+gem "jwt", "~> 2.7.0"
+
 # rails本体（標準gem）
 gem "rails", "~> 7.0.4"
 

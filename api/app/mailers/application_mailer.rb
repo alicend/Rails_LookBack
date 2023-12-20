@@ -1,4 +1,4 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: "from@example.com"
+  default from: "Look Back Calendar <no-reply@lookback-calendar.com>"
   layout "mailer"
 end
