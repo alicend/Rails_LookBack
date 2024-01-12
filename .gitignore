@@ -2,3 +2,4 @@ api/log/
 api/tmp/
 .vscode/
 client/app/lookback/.next/
+client/app/lookback/node_modules/

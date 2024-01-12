@@ -87,6 +87,8 @@ const SignUp: React.FC<Props> = ({ email, userGroupID }) => {
     password: "",
     user_group: "",
   });
+  console.log(userGroupID)
+  console.log(userGroupID)
 
   let isDisabled = true;
   if (userGroupID !== "") {
@@ -228,7 +230,7 @@ const SignUp: React.FC<Props> = ({ email, userGroupID }) => {
           />
         </Grid>
 
-        {userGroupID !== null ? null : (
+        {userGroupID !== "" ? "" : (
           <>
             <br />
             <Grid item>
@@ -258,7 +260,7 @@ const SignUp: React.FC<Props> = ({ email, userGroupID }) => {
             color="primary"
             size="small"
             disabled={isDisabled}
-            onClick={userGroupID !== null ? registerInvite : register}
+            onClick={userGroupID !== "" ? registerInvite : register}
           >
             Sign Up
           </StyledButton>
