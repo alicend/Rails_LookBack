@@ -36,5 +36,6 @@ module Myapp
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.autoload_paths += %W[#{config.root}/lib]
+    config.autoload_paths += %W[#{config.root}/app/input_dto]
   end
 end
