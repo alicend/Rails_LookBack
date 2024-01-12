@@ -17,7 +17,7 @@ class Api::V1::UsersController < ApplicationController
     # レコードが存在する場合
     # メール送信の処理（MailSenderのロジックに依存）
     begin
-      AuthMailer.sign_up_email(email: user_input.email).deliver_now
+      PasswordResetMailer.password_reset_email(email: user_input.email).deliver_now
     rescue => e
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
     end
