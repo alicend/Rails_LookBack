@@ -16,6 +16,7 @@ Rails.application.routes.draw do
 
       resources :users do
         collection do
+          post 'password', to: 'users#reset_password'
           post 'password/request', to: 'users#send_email_reset_password'
         end
       end
