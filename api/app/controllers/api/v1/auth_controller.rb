@@ -17,6 +17,7 @@ class Api::V1::AuthController < ApplicationController
     begin
       AuthMailer.sign_up_email(email: user_input.email).deliver_now
     rescue => e
+      logger.error e.message
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
     end
 
@@ -25,7 +26,6 @@ class Api::V1::AuthController < ApplicationController
 
   def create
     user_input = UserPreSignUpInput.new(email: params[:email])
-
     unless user_input.valid?
       render json: { errors: user_input.errors.full_messages }, status: :bad_request
       return
@@ -39,7 +39,6 @@ class Api::V1::AuthController < ApplicationController
 
     # メール送信の処理（MailSenderのロジックに依存）
     begin
-      # ここでメール送信のロジックを実行
       AuthMailer.sign_up_email(email: user_input.email).deliver_now
     rescue => e
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
@@ -48,7 +47,41 @@ class Api::V1::AuthController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def create
+    user_input = UserSignUpInput.new(sign_up_params)
+
+    unless user_input.valid?
+      logger.error user_input.errors.full_messages
+      render json: { error: user_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # 新しいUserGroupを作成
+    user_group = UserGroup.new(name: user_input.user_group)
+    unless user_group.save
+      logger.error user_group.errors.full_messages
+      return render json: { error: user_group.errors.full_messages }, status: :internal_server_error
+    end
+
+    # 新しいユーザーを作成
+    user = User.new(
+      name: sign_up_params[:username],
+      password: sign_up_params[:password],
+      email: sign_up_params[:email],
+      user_group_id: user_group.id,
+    )
+    unless user.save
+      logger.error user.errors.full_messages
+      return render json: { error: user.errors.full_messages }, status: :internal_server_error
+    end
+    render json: { user_id: user.id, message: "Successfully created user" }, status: :ok if user.save
+  end
+
   private
+
+  def sign_up_params
+    params.require(:auth).permit(:email, :password, :username, :user_group)
+  end
 
   def create_guest_user
     ActiveRecord::Base.transaction do
@@ -112,5 +145,4 @@ class Api::V1::AuthController < ApplicationController
     Rails.logger.error "エラー: #{e.message}"
     return nil
   end
-
 end
