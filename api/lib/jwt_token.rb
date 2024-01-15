@@ -12,4 +12,36 @@ module JwtToken
 
     JWT.encode(payload, secret_key, "HS256")
   end
+
+  def self.generate_session_token(user_id)
+    secret_key = Settings.session_secret_key
+    exp = Time.now.to_i + 3600 # 1時間後のUNIXタイムスタンプ
+
+    payload = {
+      user_id:,
+      exp:
+    }
+
+    JWT.encode(payload, secret_key, 'HS256')
+  end
+
+  def self.generate_user_group_id_token(user_group_id)
+    secret_key = Settings.user_group_id_secret_key
+    exp = Time.now.to_i + 3600 # 1時間後のUNIXタイムスタンプ
+
+    payload = {
+      user_group_id:,
+      exp:
+    }
+
+    JWT.encode(payload, secret_key, 'HS256')
+  end
+
+  def self.parse_session_token(token_string)
+    secret_key = ENV['SESSION_SECRET_KEY']
+    JWT.decode(token_string, secret_key, true, { algorithm: 'HS256' })
+  rescue JWT::DecodeError => e
+    Rails.logger.error e.message
+    nil
+  end
 end

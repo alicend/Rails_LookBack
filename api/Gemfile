@@ -21,6 +21,9 @@ gem "rack-cors"
 # メールSDK
 gem "resend", "~> 0.8.0"
 
+# パスワードのハッシュ化と認証
+gem 'bcrypt', '~> 3.1.7'
+
 # JWT
 gem "jwt", "~> 2.7.0"
 

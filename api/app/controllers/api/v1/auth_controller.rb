@@ -42,9 +42,9 @@ class Api::V1::AuthController < ApplicationController
 
     # 新しいユーザーを作成
     user = User.new(
-      name: sign_up_params[:username],
-      password: sign_up_params[:password],
-      email: sign_up_params[:email],
+      name: user_input.username,
+      password: user_input.password,
+      email: user_input.email,
       user_group_id: user_group.id,
     )
     unless user.save
@@ -54,10 +54,46 @@ class Api::V1::AuthController < ApplicationController
     render json: { user_id: user.id, message: "Successfully created user" }, status: :ok if user.save
   end
 
+  def login
+    login_input = LoginInput.new(login_params)
+
+    unless login_input.valid?
+      logger.error login_input.errors.full_messages
+      render json: { error: login_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    user = User.find_by_email(login_input.email)
+    if user.nil?
+      render json: { error: '存在しないユーザです' }, status: :not_found
+      return
+    end
+
+    unless user.authenticate(login_input.password)
+      render json: { error: 'パスワードが違います' }, status: :unauthorized
+      return
+    end
+
+    begin
+      token = JwtToken.generate_session_token(user)
+      cookies.signed[:jwt_token] = { value: token, httponly: true, domain: Settings.front_domain }
+      cookies.signed[:guest_login] = { value: false, httponly: true, domain: Settings.front_domain }
+    rescue => e
+      logger.error e.message
+      return render json: { error: e.message }, status: :bad_request
+    end
+
+    render json: {}, status: :ok
+  end
+
   private
 
   def sign_up_params
     params.require(:auth).permit(:email, :password, :username, :user_group)
+  end
+
+  def login_params
+    params.require(:auth).permit(:email, :password)
   end
 
   def create_guest_user
