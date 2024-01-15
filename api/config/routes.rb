@@ -9,7 +9,7 @@ Rails.application.routes.draw do
       post "/signup", to: "auth#create"
       # post '/invite/signup', to: 'auth#create'
       post '/login', to: 'auth#login'
-      # get '/login/guest', to: 'auth#guest_login'
+      get '/login/guest', to: 'auth#guest_login'
       get '/logout', to: 'auth#logout'
 
 
