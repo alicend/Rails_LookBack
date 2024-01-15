@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       # post '/invite/request', to: 'auth#send_invite_email'
       post "/signup", to: "auth#create"
       # post '/invite/signup', to: 'auth#create'
-      post '/login', to: 'auth#create'
+      post '/login', to: 'auth#login'
       # get '/login/guest', to: 'auth#guest_login'
       # get '/logout', to: 'auth#destroy'
 
