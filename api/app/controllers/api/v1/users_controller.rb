@@ -4,13 +4,15 @@ class Api::V1::UsersController < ApplicationController
     user_input = UserPreSignUpInput.new(email: params[:email])
 
     unless user_input.valid?
-      render json: { errors: user_input.errors.full_messages }, status: :bad_request
+      logger.error user_input.errors.full_messages
+      render json: { error: user_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # メールアドレスが登録済みか確認
     user = User.find_by(email: user_input.email)
     unless user.present?
+      logger.error "入力したメールアドレスは未登録です"
       return render json: { error: "入力したメールアドレスは未登録です" }, status: :bad_request
     end
 
@@ -19,6 +21,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       PasswordResetMailer.password_reset_email(email: user_input.email).deliver_now
     rescue => e
+      logger.error "メールの送信に失敗しました"
       return render json: { error: "メールの送信に失敗しました" }, status: :internal_server_error
     end
 
@@ -26,16 +29,18 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def reset_password
-    user_input = UserSignUpInput.new(email: params[:email], password: params[:password])
+    user_input = PasswordResetInput.new(email: params[:email], password: params[:password])
 
     unless user_input.valid?
-      render json: { errors: user_input.errors.full_messages }, status: :bad_request
+      logger.error user_input.errors.full_messages
+      render json: { error: user_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # メールアドレスが登録済みか確認
     user = User.find_by(email: user_input.email)
     unless user.present?
+      logger.error "ユーザが存在しません"
       return render json: { error: "ユーザが存在しません" }, status: :bad_request
     end
 
@@ -43,7 +48,8 @@ class Api::V1::UsersController < ApplicationController
       logger.info "パスワードの更新に成功"
       render json: {}, status: :ok
     else
-      render json: { error: "" }, status: :internal_server_error
+      logger.info user.errors.full_messages
+      render json: { error: user.errors.full_messages }, status: :internal_server_error
     end
   end
 end
