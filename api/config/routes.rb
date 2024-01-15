@@ -12,10 +12,21 @@ Rails.application.routes.draw do
       get '/login/guest', to: 'auth#guest_login'
       get '/logout', to: 'auth#logout'
 
+      resources :tasks do
+        collection do
+          get 'task-board', to: 'tasks#task_board_index'
+        end
+      end
 
+      resources :categories do
+        collection do
+          get 'task-board', to: 'categories#index'
+        end
+      end
 
       resources :users do
         collection do
+          get '', to: 'users#index'
           put 'password', to: 'users#reset_password'
           post 'password/request', to: 'users#send_email_reset_password'
         end
