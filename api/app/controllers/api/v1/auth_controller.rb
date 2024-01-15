@@ -86,6 +86,13 @@ class Api::V1::AuthController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def logout
+    cookies.delete(:jwt_token, domain: Settings.front_domain)
+    cookies.delete(:guest_login, domain: Settings.front_domain)
+
+    render json: {}, status: :ok
+  end
+
   private
 
   def sign_up_params

@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       # post '/invite/signup', to: 'auth#create'
       post '/login', to: 'auth#login'
       # get '/login/guest', to: 'auth#guest_login'
-      # get '/logout', to: 'auth#destroy'
+      get '/logout', to: 'auth#logout'
 
 
 
