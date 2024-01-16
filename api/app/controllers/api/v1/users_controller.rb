@@ -1,5 +1,9 @@
 class Api::V1::UsersController < ApplicationController
 
+  def index
+    render json: { users: {} }, status: :ok
+  end
+
   def send_email_reset_password
     user_input = UserPreSignUpInput.new(email: params[:email])
 
