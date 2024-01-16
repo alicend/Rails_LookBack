@@ -100,7 +100,7 @@ class Api::V1::AuthController < ApplicationController
     begin
       token = JwtToken.generate_session_token(user.id)
       cookies[:access_token] = { value: token, httponly: true, secure: true }
-      cookies[:guest_login] = { value: "true", httponly: true, secure: true }
+      cookies[:guest_login] = { value: "true", httponly: false, secure: true }
     rescue => e
       logger.error e.message
       return render json: { error: e.message }, status: :bad_request
