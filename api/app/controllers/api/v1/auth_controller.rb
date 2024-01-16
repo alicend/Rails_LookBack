@@ -93,22 +93,24 @@ class Api::V1::AuthController < ApplicationController
 
     user = create_guest_user
 
-    unless create_guest_user
+    unless user
       return render json: { error: "ゲストログインに失敗しました" }, status: :internal_server_error
     end
 
     begin
-      token = JwtToken.generate_session_token(user)
-      cookies.signed[:jwt_token] = { value: token, httponly: true, domain: Settings.front_domain }
-      cookies.signed[:guest_login] = { value: "true", httponly: true, domain: Settings.front_domain }
+      token = JwtToken.generate_session_token(user.id)
+      cookies[:access_token] = { value: token, httponly: true, secure: true }
+      cookies[:guest_login] = { value: "true", httponly: true, secure: false }
     rescue => e
       logger.error e.message
       return render json: { error: e.message }, status: :bad_request
     end
+
+    return render json: {}, status: :ok
   end
 
   def logout
-    cookies.delete(:jwt_token, domain: Settings.front_domain)
+    cookies.delete(:access_token, domain: Settings.front_domain)
     cookies.delete(:guest_login, domain: Settings.front_domain)
 
     render json: {}, status: :ok
@@ -125,9 +127,12 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def create_guest_user
+
+    users = nil # 初期化
+
     ActiveRecord::Base.transaction do
       # UserGroupの作成
-      user_group = UserGroup.create!(name: "開発部")
+      user_group = UserGroup.create!(id: 0, name: "開発部")
 
       # Usersの作成
       users = User.create!([
@@ -175,10 +180,10 @@ class Api::V1::AuthController < ApplicationController
         start_date: Time.now + 7.day
       },
       ])
-
-      Rails.logger.info "ゲストユーザーの作成に成功"
-      return users.first
     end
+    Rails.logger.info "ゲストユーザーの作成に成功"
+    return users.first
+
   rescue ActiveRecord::RecordInvalid => e
     # エラーログ出力
     Rails.logger.error "エラー: #{e.message}"
@@ -202,8 +207,9 @@ class Api::V1::AuthController < ApplicationController
       # 最後にIDが0であるUserGroupを削除
       UserGroup.where(id: 0).delete_all
 
-      return true
     end
+
+    return true
   rescue => e
     Rails.logger.error "Error in deleting guest users: #{e.message}"
     # トランザクションのロールバックを明示的に指示
