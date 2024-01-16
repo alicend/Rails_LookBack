@@ -27,6 +27,9 @@ gem 'bcrypt', '~> 3.1.7'
 # JWT
 gem "jwt", "~> 2.7.0"
 
+# クロスオリジンを許可
+gem "rails_same_site_cookie", "~> 0.1.8"
+
 # rails本体（標準gem）
 gem "rails", "~> 7.0.4"
 

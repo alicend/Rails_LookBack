@@ -100,7 +100,7 @@ class Api::V1::AuthController < ApplicationController
     begin
       token = JwtToken.generate_session_token(user.id)
       cookies[:access_token] = { value: token, httponly: true, secure: true }
-      cookies[:guest_login] = { value: "true", httponly: true, secure: false }
+      cookies[:guest_login] = { value: "true", httponly: true, secure: true }
     rescue => e
       logger.error e.message
       return render json: { error: e.message }, status: :bad_request
@@ -110,8 +110,8 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def logout
-    cookies.delete(:access_token, domain: Settings.front_domain)
-    cookies.delete(:guest_login, domain: Settings.front_domain)
+    cookies.delete(:access_token, httponly: true, secure: true)
+    cookies.delete(:guest_login, httponly: true, secure: true)
 
     render json: {}, status: :ok
   end
