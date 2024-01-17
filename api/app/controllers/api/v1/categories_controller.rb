@@ -9,7 +9,9 @@ class Api::V1::CategoriesController < ApplicationController
     login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
     Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
 
-    categories = Category.where(user_group_id: login_user_group_id).order(:category).select(:id, :category)
+    categories = Category.where(user_group_id: login_user_group_id)
+                  .order(:category)
+                  .select('id AS ID', 'category AS Category')
     Rails.logger.info("カテゴリーの取得に成功")
 
     render json: { categories: categories }, status: :ok
