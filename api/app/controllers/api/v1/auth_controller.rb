@@ -174,11 +174,21 @@ class Api::V1::AuthController < ApplicationController
         description: "最後の四半期の監査",
         creator: users.first,
         category: categories.second,
-        status: 1,
+        status: 3,
         responsible: users.second,
         estimate: 15,
         start_date: Time.now + 7.day
       },
+      {
+        task: "新規機能の開発",
+        description: "ユーザーインターフェースの改善",
+        creator: users.second,
+        category: categories.first,
+        status: 4,
+        responsible: users.first,
+        estimate: 5,
+        start_date: Time.now - 6.day
+    }
       ])
     end
     Rails.logger.info "ゲストユーザーの作成に成功"

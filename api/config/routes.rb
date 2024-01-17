@@ -15,6 +15,8 @@ Rails.application.routes.draw do
       resources :tasks do
         collection do
           get 'task-board', to: 'tasks#task_board_index'
+          get 'look-back', to: 'tasks#look_back_index'
+          post '', to: 'tasks#create'
         end
       end
 
