@@ -10,14 +10,15 @@ class Api::V1::UsersController < ApplicationController
     login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
     Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
 
-    users = User.where(user_group_id: login_user_group_id).order(:name).select(:id, :name)
+    users = User.where(user_group_id: login_user_group_id)
+              .order(:name)
+              .select('id AS ID', 'name AS Name')
     Rails.logger.info("ユーザのの取得に成功")
 
     render json: { users: users }, status: :ok
   rescue => e
     Rails.logger.error("ユーザの取得に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
-  end
   end
 
   def send_email_reset_password
