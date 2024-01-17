@@ -194,7 +194,7 @@ class Api::V1::AuthController < ApplicationController
     Rails.logger.info "ゲストユーザーの作成に成功"
     return users.first
 
-  rescue ActiveRecord::RecordInvalid => e
+  rescue e
     # エラーログ出力
     Rails.logger.error "エラー: #{e.message}"
     return false
