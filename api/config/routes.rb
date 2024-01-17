@@ -22,6 +22,9 @@ Rails.application.routes.draw do
         collection do
           get '', to: 'categories#index'
           post '', to: 'categories#create'
+        end
+
+        member do
           put '', to: 'categories#update'
           delete '', to: 'categories#destroy'
         end

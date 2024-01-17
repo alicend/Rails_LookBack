@@ -21,7 +21,7 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def create
-    create_category_input = CreateCategoryInput.new(category: params[:category])
+    create_category_input = CategoryInput.new(category: params[:category])
 
     unless create_category_input.valid?
       render json: { errors: create_category_input.errors.full_messages }, status: :bad_request
@@ -37,12 +37,9 @@ class Api::V1::CategoriesController < ApplicationController
     login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
     Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
-    # 新しいカテゴリーを作成
+    # カテゴリーを作成
     category = Category.new(category: create_category_input.category, user_group_id: login_user_group.id)
-    unless category.save
-      logger.error category.errors.full_messages
-      return render json: { error: category.errors.full_messages }, status: :internal_server_error
-    end
+    Rails.logger.info("カテゴリーの作成に成功")
 
     categories = Category.where(user_group_id: login_user_group.id)
                   .order(:category)
@@ -54,4 +51,62 @@ class Api::V1::CategoriesController < ApplicationController
     Rails.logger.error("カテゴリーの作成に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
+
+  def update
+    update_category_input = CategoryInput.new(category: params[:category])
+
+    unless update_category_input.valid?
+      render json: { errors: update_category_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # 新しいカテゴリーを更新
+    category = Category.find(params[:id])
+    Rails.logger.error("CookieからユーザIDの抽出に失敗:::::#{category}")
+    category.update(category: update_category_input.category)
+    Rails.logger.info("カテゴリーの更新に成功")
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
+
+    categories = Category.where(user_group_id: login_user_group.id)
+                  .order(:category)
+                  .select('id AS ID', 'category AS Category')
+    Rails.logger.info("カテゴリーの取得に成功")
+
+    tasks = Task.joins(:category)
+            .left_joins(:creator, :responsible)
+            .select(
+                'tasks.id AS ID',
+                'tasks.task AS Task',
+                'tasks.description AS Description',
+                'tasks.start_date AS StartDate',
+                'tasks.status AS Status',
+                'CASE tasks.status WHEN 1 THEN "未着" WHEN 2 THEN "進行中" WHEN 3 THEN "完了" WHEN 4 THEN "Look Back" ELSE "Unknown status" END AS StatusName',
+                'categories.id AS Category',
+                'categories.category AS CategoryName',
+                'tasks.estimate AS Estimate',
+                'responsibles_tasks.id AS Responsible',
+                'responsibles_tasks.name AS ResponsibleUserName',
+                'users.id AS Creator',
+                'users.name AS CreatorUserName',
+                'tasks.created_at AS CreatedAt',
+                'tasks.updated_at AS UpdatedAt'
+            )
+            .where.not(status: 4)
+            .order(created_at: :asc)
+    Rails.logger.info("タスクボード用のタスクの取得に成功")
+
+    render json: { categories: categories, tasks: tasks }, status: :ok
+  rescue => e
+    Rails.logger.error("カテゴリーの更新に失敗しました: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
 end

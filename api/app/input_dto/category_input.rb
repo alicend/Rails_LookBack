@@ -1,4 +1,4 @@
-class CreateCategoryInput
+class CategoryInput
   include ActiveModel::Model
   include ActiveModel::Validations
 
