@@ -15,7 +15,7 @@ class Api::V1::TasksController < ApplicationController
                 'tasks.id AS ID',
                 'tasks.task AS Task',
                 'tasks.description AS Description',
-                'tasks.start_date AS StartDate',
+                'DATE_FORMAT(tasks.start_date, "%Y-%m-%d") AS StartDate',
                 'tasks.status AS Status',
                 'CASE tasks.status WHEN 1 THEN "未着" WHEN 2 THEN "進行中" WHEN 3 THEN "完了" WHEN 4 THEN "Look Back" ELSE "Unknown status" END AS StatusName',
                 'categories.id AS Category',
@@ -25,8 +25,8 @@ class Api::V1::TasksController < ApplicationController
                 'responsibles_tasks.name AS ResponsibleUserName',
                 'users.id AS Creator',
                 'users.name AS CreatorUserName',
-                'tasks.created_at AS CreatedAt',
-                'tasks.updated_at AS UpdatedAt'
+                'DATE_FORMAT(tasks.created_at, "%Y-%m-%d %H:%i") AS CreatedAt',
+                'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
             .order(created_at: :asc)
@@ -55,6 +55,7 @@ class Api::V1::TasksController < ApplicationController
                 'tasks.task AS Task',
                 'tasks.description AS Description',
                 'tasks.start_date AS StartDate',
+                'DATE_FORMAT(tasks.start_date, "%Y-%m-%d") AS StartDate',
                 'tasks.status AS Status',
                 'CASE tasks.status WHEN 1 THEN "未着" WHEN 2 THEN "進行中" WHEN 3 THEN "完了" WHEN 4 THEN "Look Back" ELSE "Unknown status" END AS StatusName',
                 'categories.id AS Category',
@@ -64,8 +65,8 @@ class Api::V1::TasksController < ApplicationController
                 'responsibles_tasks.name AS ResponsibleUserName',
                 'users.id AS Creator',
                 'users.name AS CreatorUserName',
-                'tasks.created_at AS CreatedAt',
-                'tasks.updated_at AS UpdatedAt'
+                'DATE_FORMAT(tasks.created_at, "%Y-%m-%d %H:%i") AS CreatedAt',
+                'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where(status: 4)
             .order(created_at: :asc)
