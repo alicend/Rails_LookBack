@@ -3,7 +3,7 @@ class ApplicationController < ActionController::API
 
   protected
 
-  # JWTからユーザーIDを抽出する
+  # CookieからユーザーIDを抽出する
   def extract_user_id
     token = cookies[:access_token]
     return nil if token.blank?
