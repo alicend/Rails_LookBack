@@ -45,6 +45,49 @@ class Api::V1::UsersController < ApplicationController
     render json: { error: e.message }, status: :internal_server_error
   end
 
+  def send_update_email_email
+    send_update_email_input = SendUpdateEmailInput.new(email: params[:email])
+
+    unless send_update_email_input.valid?
+      Rails.logger.error(send_update_email_input.errors.full_messages)
+      render json: { errors: send_update_email_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # メールアドレスが既に使用されていないか確認
+    user = User.find_by(email: send_update_email_input.email)
+    if user.present?
+      return render json: { error: "他のユーザーが使用しているので別のメールアドレスを入力してください" }, status: :bad_request
+    end
+
+    # メール送信の処理（MailSenderのロジックに依存）
+    begin
+      UpdateEmailMailer.update_email_email(email: send_update_email_input.email).deliver_now
+    rescue => e
+      logger.error e.message
+      return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
+    end
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    user = User.left_joins(:user_group)
+              .select(
+                'users.id AS ID',
+                'users.email AS Email',
+                'users.name AS Name',
+                'users.user_group_id AS UserGroupID',
+                'user_groups.name AS UserGroup',
+                )
+                .find_by(id: login_user_id)
+    Rails.logger.info("ログインユーザのの取得に成功")
+
+    render json: { user: user }, status: :ok
+  end
+
   def send_email_reset_password
     password_pre_reset_input = PasswordPreResetInput.new(email: params[:email])
 

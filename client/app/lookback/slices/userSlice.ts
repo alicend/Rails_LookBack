@@ -158,7 +158,7 @@ export const fetchAsyncUpdateLoginUserEmail = createAsyncThunk(
   "users/updateUserEmail",
   async (email: string, thunkAPI) => {
     try {
-      const res = await axios.put(
+      const res = await axios.post(
         `${ENDPOINTS.USERS}/me/email/request`,
         { email: email },
         COMMON_HTTP_HEADER

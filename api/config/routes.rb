@@ -42,6 +42,7 @@ Rails.application.routes.draw do
         collection do
           get '', to: 'users#index'
           get 'me', to: 'users#current_user'
+          post 'me/email/request', to: 'users#send_update_email_email'
           put 'password', to: 'users#reset_password'
           post 'password/request', to: 'users#send_email_reset_password'
         end
