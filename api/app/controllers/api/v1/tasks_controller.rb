@@ -196,22 +196,9 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def destroy
-    delete_task_input = DeleteTaskInput.new(id: params[:id])
-
-    unless delete_task_input.valid?
-      Rails.logger.error(delete_task_input.errors.full_messages)
-      render json: { errors: delete_task_input.errors.full_messages }, status: :bad_request
-      return
-    end
-
-    login_user_id = extract_user_id
-    unless login_user_id
-      Rails.logger.error("CookieからユーザIDの抽出に失敗")
-      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
-    end
 
     # タスクを削除
-    task = Task.find(delete_task_input.id)
+    task = Task.find(params[:id])
     task.destroy!
     Rails.logger.info("タスクの削除に成功")
 
