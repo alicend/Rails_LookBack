@@ -21,6 +21,30 @@ class Api::V1::UsersController < ApplicationController
     render json: { error: e.message }, status: :internal_server_error
   end
 
+  def current_user
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    user = User.left_joins(:user_group)
+              .select(
+                'users.id AS ID',
+                'users.email AS Email',
+                'users.name AS Name',
+                'users.user_group_id AS UserGroupID',
+                'user_groups.name AS UserGroup',
+                )
+                .find_by(id: login_user_id)
+    Rails.logger.info("ログインユーザのの取得に成功")
+
+    render json: { user: user }, status: :ok
+  rescue => e
+    Rails.logger.error("ログインユーザの取得に失敗しました: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
   def send_email_reset_password
     password_pre_reset_input = PasswordPreResetInput.new(email: params[:email])
 

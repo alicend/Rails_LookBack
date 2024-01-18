@@ -41,6 +41,7 @@ Rails.application.routes.draw do
       resources :users do
         collection do
           get '', to: 'users#index'
+          get 'me', to: 'users#current_user'
           put 'password', to: 'users#reset_password'
           post 'password/request', to: 'users#send_email_reset_password'
         end
