@@ -6,8 +6,8 @@ class Api::V1::TasksController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_group_id }).select('user_groups.id').first
-    Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
@@ -29,6 +29,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("ルックバック用のタスクの取得に成功")
 
@@ -45,8 +46,8 @@ class Api::V1::TasksController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_group_id }).select('user_groups.id').first
-    Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
@@ -69,6 +70,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("ルックバック用のタスクの取得に成功")
 
@@ -106,6 +108,9 @@ class Api::V1::TasksController < ApplicationController
     )
     Rails.logger.info("タスクの作成に成功")
 
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
+
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
             .select(
@@ -127,6 +132,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("タスクボード用のタスクの取得に成功")
 
@@ -137,7 +143,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def update
-    update_task_input = DeleteTaskInput.new(email: params[:email])
+    update_task_input = TaskInput.new(task_params)
 
     unless update_task_input.valid?
       Rails.logger.error(update_task_input.errors.full_messages)
@@ -165,6 +171,9 @@ class Api::V1::TasksController < ApplicationController
     )
     Rails.logger.info("タスクの更新に成功")
 
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
+
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
             .select(
@@ -186,6 +195,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("タスクボード用のタスクの取得に成功")
 
@@ -208,8 +218,8 @@ class Api::V1::TasksController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_group_id }).select('user_groups.id').first
-    Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
@@ -232,6 +242,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("ルックバック用のタスクの取得に成功")
 
@@ -247,6 +258,15 @@ class Api::V1::TasksController < ApplicationController
     task = Task.find(params[:id])
     task.destroy!
     Rails.logger.info("タスクの削除に成功")
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
@@ -269,6 +289,7 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("タスクボード用のタスクの取得に成功")
 

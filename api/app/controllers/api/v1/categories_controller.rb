@@ -6,10 +6,10 @@ class Api::V1::CategoriesController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
-    Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
-    categories = Category.where(user_group_id: login_user_group_id)
+    categories = Category.where(user_group_id: login_user_group.id)
                   .order(:category)
                   .select('id AS ID', 'category AS Category')
     Rails.logger.info("カテゴリーの取得に成功")
@@ -39,7 +39,7 @@ class Api::V1::CategoriesController < ApplicationController
     Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
 
     # カテゴリーを作成
-    category = Category.new(category: create_category_input.category, user_group_id: login_user_group.id)
+    category = Category.create(category: create_category_input.category, user_group_id: login_user_group.id)
     Rails.logger.info("カテゴリーの作成に成功")
 
     categories = Category.where(user_group_id: login_user_group.id)
@@ -88,6 +88,7 @@ class Api::V1::CategoriesController < ApplicationController
                 'tasks.task AS Task',
                 'tasks.description AS Description',
                 'tasks.start_date AS StartDate',
+                'DATE_FORMAT(tasks.start_date, "%Y-%m-%d") AS StartDate',
                 'tasks.status AS Status',
                 'CASE tasks.status WHEN 1 THEN "未着" WHEN 2 THEN "進行中" WHEN 3 THEN "完了" WHEN 4 THEN "Look Back" ELSE "Unknown status" END AS StatusName',
                 'categories.id AS Category',
@@ -97,10 +98,11 @@ class Api::V1::CategoriesController < ApplicationController
                 'responsibles_tasks.name AS ResponsibleUserName',
                 'users.id AS Creator',
                 'users.name AS CreatorUserName',
-                'tasks.created_at AS CreatedAt',
-                'tasks.updated_at AS UpdatedAt'
+                'DATE_FORMAT(tasks.created_at, "%Y-%m-%d %H:%i") AS CreatedAt',
+                'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("タスクボード用のタスクの取得に成功")
 
@@ -138,6 +140,7 @@ class Api::V1::CategoriesController < ApplicationController
                 'tasks.task AS Task',
                 'tasks.description AS Description',
                 'tasks.start_date AS StartDate',
+                'DATE_FORMAT(tasks.start_date, "%Y-%m-%d") AS StartDate',
                 'tasks.status AS Status',
                 'CASE tasks.status WHEN 1 THEN "未着" WHEN 2 THEN "進行中" WHEN 3 THEN "完了" WHEN 4 THEN "Look Back" ELSE "Unknown status" END AS StatusName',
                 'categories.id AS Category',
@@ -147,10 +150,11 @@ class Api::V1::CategoriesController < ApplicationController
                 'responsibles_tasks.name AS ResponsibleUserName',
                 'users.id AS Creator',
                 'users.name AS CreatorUserName',
-                'tasks.created_at AS CreatedAt',
-                'tasks.updated_at AS UpdatedAt'
+                'DATE_FORMAT(tasks.created_at, "%Y-%m-%d %H:%i") AS CreatedAt',
+                'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
             .where.not(status: 4)
+            .where("categories.user_group_id = ?", login_user_group.id)
             .order(created_at: :asc)
     Rails.logger.info("タスクボード用のタスクの取得に成功")
 
