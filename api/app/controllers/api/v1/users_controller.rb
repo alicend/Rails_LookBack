@@ -22,16 +22,16 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def send_email_reset_password
-    user_input = UserPreSignUpInput.new(email: params[:email])
+    password_pre_reset_input = PasswordPreResetInput.new(email: params[:email])
 
-    unless user_input.valid?
-      logger.error user_input.errors.full_messages
-      render json: { error: user_input.errors.full_messages }, status: :bad_request
+    unless password_pre_reset_input.valid?
+      Rails.logger.error(password_pre_reset_input.errors.full_messages)
+      render json: { error: password_pre_reset_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # メールアドレスが登録済みか確認
-    user = User.find_by(email: user_input.email)
+    user = User.find_by(email: password_pre_reset_input.email)
     unless user.present?
       logger.error "入力したメールアドレスは未登録です"
       return render json: { error: "入力したメールアドレスは未登録です" }, status: :bad_request
@@ -40,7 +40,7 @@ class Api::V1::UsersController < ApplicationController
     # レコードが存在する場合
     # メール送信の処理（MailSenderのロジックに依存）
     begin
-      PasswordResetMailer.password_reset_email(email: user_input.email).deliver_now
+      PasswordResetMailer.password_reset_email(email: password_pre_reset_input.email).deliver_now
     rescue => e
       logger.error "メールの送信に失敗しました"
       return render json: { error: "メールの送信に失敗しました" }, status: :internal_server_error
@@ -50,22 +50,23 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def reset_password
-    user_input = PasswordResetInput.new(email: params[:email], password: params[:password])
+    password_reset_input = PasswordResetInput.new(email: params[:email], password: params[:password])
 
-    unless user_input.valid?
-      logger.error user_input.errors.full_messages
-      render json: { error: user_input.errors.full_messages }, status: :bad_request
+    unless password_reset_input.valid?
+      Rails.logger.error(password_reset_input.errors.full_messages)
+      logger.error password_reset_input.errors.full_messages
+      render json: { error: password_reset_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # メールアドレスが登録済みか確認
-    user = User.find_by(email: user_input.email)
+    user = User.find_by(email: password_reset_input.email)
     unless user.present?
       logger.error "ユーザが存在しません"
       return render json: { error: "ユーザが存在しません" }, status: :bad_request
     end
 
-    if user.update(password: user_input.password)
+    if user.update(password: password_reset_input.password)
       logger.info "パスワードの更新に成功"
       render json: {}, status: :ok
     else

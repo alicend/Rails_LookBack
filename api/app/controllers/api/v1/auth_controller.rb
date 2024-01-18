@@ -1,21 +1,22 @@
 class Api::V1::AuthController < ApplicationController
   def send_sign_up_email
-    user_input = UserPreSignUpInput.new(email: params[:email])
+    user_pre_sigh_up_input = UserPreSignUpInput.new(email: params[:email])
 
-    unless user_input.valid?
-      render json: { errors: user_input.errors.full_messages }, status: :bad_request
+    unless user_pre_sigh_up_input.valid?
+      Rails.logger.error(user_pre_sigh_up_input.errors.full_messages)
+      render json: { errors: user_pre_sigh_up_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # メールアドレスが既に使用されていないか確認
-    user = User.find_by(email: user_input.email)
+    user = User.find_by(email: user_pre_sigh_up_input.email)
     if user.present?
       return render json: { error: "他のユーザーが使用しているので別のメールアドレスを入力してください" }, status: :bad_request
     end
 
     # メール送信の処理（MailSenderのロジックに依存）
     begin
-      AuthMailer.sign_up_email(email: user_input.email).deliver_now
+      AuthMailer.sign_up_email(email: user_pre_sigh_up_input.email).deliver_now
     rescue => e
       logger.error e.message
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
@@ -25,16 +26,16 @@ class Api::V1::AuthController < ApplicationController
   end
 
   def create
-    user_input = UserSignUpInput.new(sign_up_params)
+    user_sigh_up_input = UserSignUpInput.new(sign_up_params)
 
-    unless user_input.valid?
-      logger.error user_input.errors.full_messages
-      render json: { error: user_input.errors.full_messages }, status: :bad_request
+    unless user_sigh_up_input.valid?
+      Rails.logger.error(user_sigh_up_input.errors.full_messages)
+      render json: { error: user_sigh_up_input.errors.full_messages }, status: :bad_request
       return
     end
 
     # 新しいUserGroupを作成
-    user_group = UserGroup.new(name: user_input.user_group)
+    user_group = UserGroup.new(name: user_sigh_up_input.user_group)
     unless user_group.save
       logger.error user_group.errors.full_messages
       return render json: { error: user_group.errors.full_messages }, status: :internal_server_error
@@ -42,9 +43,9 @@ class Api::V1::AuthController < ApplicationController
 
     # 新しいユーザーを作成
     user = User.new(
-      name: user_input.username,
-      password: user_input.password,
-      email: user_input.email,
+      name: user_sigh_up_input.username,
+      password: user_sigh_up_input.password,
+      email: user_sigh_up_input.email,
       user_group_id: user_group.id,
     )
     unless user.save
@@ -58,7 +59,7 @@ class Api::V1::AuthController < ApplicationController
     login_input = LoginInput.new(login_params)
 
     unless login_input.valid?
-      logger.error login_input.errors.full_messages
+      Rails.logger.error(login_input.errors.full_messages)
       render json: { error: login_input.errors.full_messages }, status: :bad_request
       return
     end
