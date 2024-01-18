@@ -52,7 +52,7 @@ export default function ProfilePage() {
             className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded"
             role="alert"
           >
-            <p>You cannot edit your profile while logged in as a guest.</p>
+            <p>ゲストログイン中はプロフィールの変更ができません</p>
           </div>
         )}
         <Grid container justifyContent="center" mb={3}>
