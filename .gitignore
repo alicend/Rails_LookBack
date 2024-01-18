@@ -1,5 +1,7 @@
 api/log/
 api/tmp/
+api/vendor/bundle/
+api/storage/
 .vscode/
 client/app/lookback/.next/
 client/app/lookback/node_modules/
