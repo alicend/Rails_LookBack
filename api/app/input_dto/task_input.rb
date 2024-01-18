@@ -2,8 +2,9 @@ class TaskInput
   include ActiveModel::Model
   include ActiveModel::Validations
 
-  attr_accessor :Task, :Description, :StartDate, :Estimate, :Responsible, :Status, :Category
+  attr_accessor :ID, :Task, :Description, :StartDate, :Estimate, :Responsible, :Status, :Category
 
+  validates :ID, presence: true, numericality: { only_integer: true }
   validates :Task, presence: true, length: { minimum: 1, maximum: 255 }
   validates :Description, presence: true, length: { minimum: 1, maximum: 255 }
   validates :StartDate, presence: true, length: { minimum: 1, maximum: 24 }

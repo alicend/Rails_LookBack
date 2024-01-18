@@ -18,6 +18,12 @@ Rails.application.routes.draw do
           get 'look-back', to: 'tasks#look_back_index'
           post '', to: 'tasks#create'
         end
+
+        member do
+          put '', to: 'tasks#update'
+          put 'to-completed', to: 'tasks#update_to_completed'
+          delete '', to: 'tasks#destroy'
+        end
       end
 
       resources :categories do
