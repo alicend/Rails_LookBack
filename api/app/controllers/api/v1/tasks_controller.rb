@@ -79,7 +79,7 @@ class Api::V1::TasksController < ApplicationController
   end
 
   def create
-    create_task_input = TaskInput.new(email: params[:email])
+    create_task_input = TaskInput.new(create_task_params)
 
     unless create_task_input.valid?
       Rails.logger.error(create_task_input.errors.full_messages)
@@ -95,6 +95,21 @@ class Api::V1::TasksController < ApplicationController
 
     login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_group_id }).select('user_groups.id').first
     Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
+
+    user = Task.create(
+      task: create_task_input.Task,
+      description: create_task_input.Description,
+      creator_id: login_user_id,
+      category_id: create_task_input.Category,
+      status: create_task_input.Status,
+      responsible_id: create_task_input.Responsible,
+      estimate: create_task_input.Estimate,
+      start_date: create_task_input.StartDate,
+    )
+
+    def create_task_params
+      params.permit(:Task, :Description, :StartDate, :Estimate, :Responsible, :Status, :Category)
+    end
 
     tasks = Task.joins(:category)
             .left_joins(:creator, :responsible)
@@ -116,14 +131,20 @@ class Api::V1::TasksController < ApplicationController
                 'DATE_FORMAT(tasks.created_at, "%Y-%m-%d %H:%i") AS CreatedAt',
                 'DATE_FORMAT(tasks.updated_at, "%Y-%m-%d %H:%i") AS UpdatedAt'
             )
-            .where(status: 4)
+            .where.not(status: 4)
             .order(created_at: :asc)
-    Rails.logger.info("ルックバック用のタスクの取得に成功")
+    Rails.logger.info("タスクボード用のタスクの取得に成功")
 
     render json: { tasks: tasks }, status: :ok
   rescue => e
-    Rails.logger.error("ルックバック用のタスクの取得に失敗しました: #{e.message}")
+    Rails.logger.error("タスクの作成に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
+  end
+
+  private
+
+  def create_task_params
+    params.permit(:Task, :Description, :StartDate, :Estimate, :Responsible, :Status, :Category)
   end
 
 end
