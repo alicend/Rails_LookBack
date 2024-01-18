@@ -171,7 +171,46 @@ class Api::V1::UsersController < ApplicationController
 
     render json: { user: user }, status: :ok
   rescue => e
-    Rails.logger.error("ログインユーザの取得に失敗しました: #{e.message}")
+    Rails.logger.error("ログインユーザのユーザ名の更新に失敗しました: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
+  def update_current_user_password
+    update_current_user_password_input = UpdateCurrentUserPasswordInput.new(current_password: params[:current_password], new_password: params[:new_password])
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    # 入力したパスワードが正しいか確認
+    user = User.find(login_user_id)
+    unless user.authenticate(update_current_user_password_input.current_password)
+      render json: { error: 'パスワードが違います' }, status: :bad_request
+      return
+    end
+
+    # ログインユーザのパスワードを更新
+    user.update!(
+      password: update_current_user_password_input.new_password,
+    )
+    Rails.logger.info("ログインユーザのパスワードの更新に成功")
+
+    user = User.left_joins(:user_group)
+              .select(
+                'users.id AS ID',
+                'users.email AS Email',
+                'users.name AS Name',
+                'users.user_group_id AS UserGroupID',
+                'user_groups.name AS UserGroup',
+                )
+                .find_by(id: login_user_id)
+    Rails.logger.info("ログインユーザのの取得に成功")
+
+    render json: { user: user }, status: :ok
+  rescue => e
+    Rails.logger.error("ログインユーザのパスワードの更新に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
 end
