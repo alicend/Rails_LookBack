@@ -413,6 +413,7 @@ export const taskSlice = createSlice({
             ? state.selectedTask
             : initialState.selectedTask,
           category: action.payload.categories,
+          tasks: action.payload.tasks,
           status: "succeeded",
           message: "カテゴリを削除しました",
         };
