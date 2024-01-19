@@ -48,7 +48,7 @@ Rails.application.routes.draw do
           put 'me/name', to: 'users#update_current_user_name'
           put 'me/password', to: 'users#update_current_user_password'
           # put 'me/user-group', to: 'users#update_current_user_group'
-          # delete 'me', to: 'users#delete_current_user'
+          delete 'me', to: 'users#destroy'
 
           put 'password', to: 'users#reset_password'
           post 'password/request', to: 'users#send_email_reset_password'

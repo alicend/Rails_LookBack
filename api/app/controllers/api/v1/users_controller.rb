@@ -213,4 +213,27 @@ class Api::V1::UsersController < ApplicationController
     Rails.logger.error("ログインユーザのパスワードの更新に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
+
+  def destroy
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    # ユーザを削除
+    user = User.find(login_user_id)
+    user.destroy!
+    Rails.logger.info("ユーザの削除に成功")
+
+    cookies.delete(:access_token, httponly: true, secure: true)
+    cookies.delete(:guest_login, httponly: true, secure: true)
+
+    render json: {}, status: :ok
+  rescue => e
+    Rails.logger.error("ユーザの削除に失敗しました: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
 end
