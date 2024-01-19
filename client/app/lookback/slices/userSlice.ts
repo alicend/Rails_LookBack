@@ -371,7 +371,7 @@ export const userSlice = createSlice({
       fetchAsyncGuestLogin.fulfilled,
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
-        state.message = "ログインに成功しました";
+        state.message = "ゲストログインに成功しました";
         router.push("/task-board");
       }
     );
