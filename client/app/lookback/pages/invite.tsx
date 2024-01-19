@@ -101,7 +101,7 @@ export default function InvitePage() {
             className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4 rounded"
             role="alert"
           >
-            <p>ゲストログイン中はプロフィールの変更ができません</p>
+            <p>ゲストログイン中は招待ができません</p>
           </div>
         )}
         <Grid container justifyContent="center" mb={3}>
