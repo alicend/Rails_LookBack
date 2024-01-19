@@ -41,7 +41,7 @@ export const fetchAsyncGuestLogin = createAsyncThunk(
         `${ENDPOINTS.LOGIN}/guest`,
         COMMON_HTTP_HEADER
       );
-      await router.push("/task-board");
+      
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
@@ -54,7 +54,6 @@ export const fetchAsyncLogin = createAsyncThunk(
   async (auth: LOGIN_AUTH, thunkAPI) => {
     try {
       const res = await axios.post(ENDPOINTS.LOGIN, auth, COMMON_HTTP_HEADER);
-      await router.push("/task-board");
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
@@ -373,6 +372,7 @@ export const userSlice = createSlice({
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
         state.message = "ログインに成功しました";
+        router.push("/task-board");
       }
     );
     builder.addCase(fetchAsyncGuestLogin.rejected, handleLoginError);
@@ -382,6 +382,7 @@ export const userSlice = createSlice({
       (state, action: PayloadAction<USER>) => {
         state.loginUser = action.payload;
         state.message = "ログインに成功しました";
+        router.push("/task-board");
       }
     );
     builder.addCase(fetchAsyncLogin.rejected, handleLoginError);
