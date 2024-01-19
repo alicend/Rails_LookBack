@@ -34,22 +34,6 @@ export const fetchAsyncCreateUserGroup = createAsyncThunk(
   },
 );
 
-export const fetchAsyncUpdateUserGroup = createAsyncThunk(
-  "user-groups/update",
-  async ({ id, userGroup }: { id: number; userGroup: string }, thunkAPI) => {
-    try {
-      const res = await axios.put(
-        `${ENDPOINTS}/${id}`,
-        { userGroup: userGroup },
-        COMMON_HTTP_HEADER,
-      );
-      return res.data.user_groups;
-    } catch (err: any) {
-      return handleHttpError(err, thunkAPI);
-    }
-  },
-);
-
 export const fetchAsyncDeleteUserGroup = createAsyncThunk(
   "user-groups/delete",
   async (id: number, thunkAPI) => {
@@ -128,16 +112,6 @@ export const userGroupSlice = createSlice({
     );
     builder.addCase(fetchAsyncCreateUserGroup.rejected, handleLoginError);
     builder.addCase(fetchAsyncCreateUserGroup.pending, handleLoading);
-    builder.addCase(
-      fetchAsyncUpdateUserGroup.fulfilled,
-      (state, action: PayloadAction<USER_GROUP[]>) => {
-        state.status = "succeeded";
-        state.userGroups = action.payload;
-        state.message = "ユーザーグループの更新に成功しました";
-      },
-    );
-    builder.addCase(fetchAsyncUpdateUserGroup.rejected, handleError);
-    builder.addCase(fetchAsyncUpdateUserGroup.pending, handleLoading);
     builder.addCase(
       fetchAsyncDeleteUserGroup.fulfilled,
       (state, action: PayloadAction<USER_GROUP[]>) => {

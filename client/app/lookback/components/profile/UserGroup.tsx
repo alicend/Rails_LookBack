@@ -3,7 +3,7 @@ import { Button, Grid, TextField } from "@mui/material";
 import { styled } from "@mui/system";
 import React, { FC, useState } from "react";
 import { useDispatch } from "react-redux";
-import { fetchAsyncUpdateUserGroup } from "@/slices/userGroupSlice";
+import { fetchAsyncUpdateUserGroupName } from "@/slices/userSlice";
 import { AppDispatch } from "@/store/store";
 import { USER_GROUP } from "@/types/UserGroupType";
 
@@ -46,7 +46,7 @@ const UserGroup: FC<Props> = React.memo(({ userGroup, loginStatus }) => {
 
   const update = async () => {
     await dispatch(
-      fetchAsyncUpdateUserGroup({ id: userGroup.ID, userGroup: newUserGroup }),
+      fetchAsyncUpdateUserGroupName({ id: userGroup.ID, userGroup: newUserGroup }),
     );
   };
 

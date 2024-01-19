@@ -11,6 +11,7 @@ import {
 import { PAYLOAD } from "@/types/ResponseType";
 import router from "next/router";
 import { COMMON_HTTP_HEADER } from "@/constants";
+import { USER_GROUP } from "@/types/UserGroupType";
 
 // 共通のエラーハンドラ
 const handleHttpError = (err: any, thunkAPI: any) => {
@@ -29,6 +30,7 @@ const ENDPOINTS = {
   INVITE_REGISTER: `${process.env.NEXT_PUBLIC_RESTAPI_URL}invite/signup`,
   INVITE_REQUEST: `${process.env.NEXT_PUBLIC_RESTAPI_URL}invite/request`,
   USERS: `${process.env.NEXT_PUBLIC_RESTAPI_URL}users`,
+  USER_GROUP: `${process.env.NEXT_PUBLIC_RESTAPI_URL}user-groups`
 };
 
 export const fetchAsyncGuestLogin = createAsyncThunk(
@@ -268,6 +270,22 @@ export const fetchAsyncUpdateUserGroup = createAsyncThunk(
   }
 );
 
+export const fetchAsyncUpdateUserGroupName = createAsyncThunk(
+  "user-groups/update",
+  async ({ id, userGroup }: { id: number; userGroup: string }, thunkAPI) => {
+    try {
+      const res = await axios.put(
+        `${ENDPOINTS.USER_GROUP}/${id}`,
+        { userGroup: userGroup },
+        COMMON_HTTP_HEADER,
+      );
+      return res.data.user;
+    } catch (err: any) {
+      return handleHttpError(err, thunkAPI);
+    }
+  },
+);
+
 export const fetchAsyncDeleteLoginUser = createAsyncThunk(
   "users/deleteUser",
   async (_, thunkAPI) => {
@@ -464,6 +482,16 @@ export const userSlice = createSlice({
     builder.addCase(fetchAsyncUpdateLoginUsername.rejected, handleError);
     builder.addCase(fetchAsyncUpdateLoginUsername.pending, handleLoading);
     builder.addCase(
+      fetchAsyncUpdateUserGroupName.fulfilled,
+      (state, action: PayloadAction<USER>) => {
+        state.status = "succeeded";
+        state.loginUser = action.payload;
+        state.message = "ユーザーグループの更新に成功しました";
+      },
+    );
+    builder.addCase(fetchAsyncUpdateUserGroupName.rejected, handleError);
+    builder.addCase(fetchAsyncUpdateUserGroupName.pending, handleLoading);
+    builder.addCase(
       fetchAsyncUpdateLoginUserPassword.fulfilled,
       (state, action: PayloadAction<USER>) => {
         state.status = "succeeded";
@@ -493,16 +521,6 @@ export const userSlice = createSlice({
     );
     builder.addCase(fetchAsyncResetPassword.rejected, handleError);
     builder.addCase(fetchAsyncResetPassword.pending, handleLoading);
-    builder.addCase(
-      fetchAsyncUpdateUserGroup.fulfilled,
-      (state, action: PayloadAction<USER>) => {
-        state.status = "succeeded";
-        state.loginUser = action.payload;
-        state.message = "ユーザーグループの更新に成功しました";
-      }
-    );
-    builder.addCase(fetchAsyncUpdateUserGroup.rejected, handleError);
-    builder.addCase(fetchAsyncUpdateUserGroup.pending, handleLoading);
     builder.addCase(
       fetchAsyncDeleteLoginUser.fulfilled,
       (state, action: PayloadAction<USER>) => {

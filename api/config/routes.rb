@@ -55,6 +55,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :user_groups , path: 'user-groups' do
+        member do
+          put '', to: 'user_groups#update'
+          delete '', to: 'user_groups#destroy'
+        end
+      end
+
     end
   end
 end
