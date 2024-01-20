@@ -1,4 +1,6 @@
 class Api::V1::TasksController < ApplicationController
+  before_action :authenticate
+
   def task_board_index
     login_user_id = extract_user_id
     unless login_user_id

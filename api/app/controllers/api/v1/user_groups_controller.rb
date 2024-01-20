@@ -1,4 +1,6 @@
 class Api::V1::UserGroupsController < ApplicationController
+  before_action :authenticate
+
   def update
     update_current_user_group_input = UpdateCurrentUserGroupInput.new(user_group: params[:userGroup])
 

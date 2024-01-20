@@ -1,4 +1,6 @@
 class Api::V1::UsersController < ApplicationController
+  before_action :authenticate, except: [:send_email_reset_password, :reset_password]
+
   def index
     login_user_id = extract_user_id
     unless login_user_id
