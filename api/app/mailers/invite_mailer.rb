@@ -1,5 +1,5 @@
 class InviteMailer < ApplicationMailer
-    default from: "Look Back Calendar <no-reply@lookback-calendar.com>"
+  default from: "Look Back Calendar <no-reply@lookback-calendar.com>"
 
   def invite_email(email:, user_group_id:)
     email_token = JwtToken.generate_email_token(email)
