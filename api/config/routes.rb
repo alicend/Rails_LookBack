@@ -5,9 +5,9 @@ Rails.application.routes.draw do
 
       # 認証関連ルート
       post "signup/request", to: "auth#send_sign_up_email"
-      # post '/invite/request', to: 'auth#send_invite_email'
+      post '/invite/request', to: 'auth#send_invite_email'
       post "signup", to: "auth#create"
-      # post '/invite/signup', to: 'auth#create'
+      post '/invite/signup', to: 'auth#invite_create'
       post "login", to: "auth#login"
       get "login/guest", to: "auth#guest_login"
       get "logout", to: "auth#logout"

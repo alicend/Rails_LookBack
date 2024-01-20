@@ -25,6 +25,42 @@ class Api::V1::AuthController < ApplicationController
     render json: {}, status: :ok
   end
 
+  def send_invite_email
+    invite_email_input = InviteEmailInput.new(email: params[:email])
+
+    unless invite_email_input.valid?
+      Rails.logger.error(invite_email_input.errors.full_messages)
+      render json: { errors: invite_email_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # メールアドレスが既に使用されていないか確認
+    user = User.find_by(email: invite_email_input.email)
+    if user.present?
+      Rails.logger.error("他のユーザーが使用しているので別のメールアドレスを入力してください")
+      return render json: { error: "他のユーザーが使用しているので別のメールアドレスを入力してください" }, status: :bad_request
+    end
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    login_user_group = UserGroup.joins(:users).where(users: { id: login_user_id }).select("user_groups.id").first
+    Rails.logger.info("ログインユーザグループID : #{login_user_group.id}")
+
+    # メール送信の処理（MailSenderのロジックに依存）
+    begin
+      InviteMailer.invite_email(email: invite_email_input.email, user_group_id: login_user_group.id).deliver_now
+    rescue => e
+      logger.error e.message
+      return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
+    end
+
+    render json: {}, status: :ok
+  end
+
   def create
     user_sigh_up_input = UserSignUpInput.new(sign_up_params)
 
@@ -47,6 +83,29 @@ class Api::V1::AuthController < ApplicationController
       password: user_sigh_up_input.password,
       email: user_sigh_up_input.email,
       user_group_id: user_group.id,
+    )
+    unless user.save
+      logger.error user.errors.full_messages
+      return render json: { error: user.errors.full_messages }, status: :internal_server_error
+    end
+    render json: { user_id: user.id, message: "Successfully created user" }, status: :ok if user.save
+  end
+
+  def invite_create
+    user_sigh_up_input = UserSignUpInput.new(sign_up_params)
+
+    unless user_sigh_up_input.valid?
+      Rails.logger.error(user_sigh_up_input.errors.full_messages)
+      render json: { error: user_sigh_up_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
+    # 新しいユーザーを作成
+    user = User.new(
+      name: user_sigh_up_input.username,
+      password: user_sigh_up_input.password,
+      email: user_sigh_up_input.email,
+      user_group_id: user_sigh_up_input.user_group,
     )
     unless user.save
       logger.error user.errors.full_messages
