@@ -44,10 +44,9 @@ Rails.application.routes.draw do
 
           get "me", to: "users#current_user"
           post "me/email/request", to: "users#send_update_email_email"
-          # put 'me/email', to: 'users#update_current_user_email'
+          put "me/email", to: "users#update_current_user_email"
           put "me/name", to: "users#update_current_user_name"
           put "me/password", to: "users#update_current_user_password"
-          # put 'me/user-group', to: 'users#update_current_user_group'
           delete "me", to: "users#destroy"
 
           put "password", to: "users#reset_password"

@@ -141,6 +141,39 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def update_current_user_email
+    update_current_user_email_input = UpdateCurrentUserEmailInput.new(email: params[:email])
+
+    login_user_id = extract_user_id
+    unless login_user_id
+      Rails.logger.error("CookieからユーザIDの抽出に失敗")
+      return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
+    end
+
+    # ログインユーザのユーザ名を更新
+    user = User.find(login_user_id)
+    user.update!(
+      email: update_current_user_email_input.email,
+    )
+    Rails.logger.info("ログインユーザのメールアドレスの更新に成功")
+
+    user = User.left_joins(:user_group).
+             select(
+               "users.id AS ID",
+               "users.email AS Email",
+               "users.name AS Name",
+               "users.user_group_id AS UserGroupID",
+               "user_groups.name AS UserGroup",
+             ).
+             find_by(id: login_user_id)
+    Rails.logger.info("ログインユーザのの取得に成功")
+
+    render json: { user: }, status: :ok
+  rescue => e
+    Rails.logger.error("ログインユーザのメールアドレスの更新に失敗しました: #{e.message}")
+    render json: { error: e.message }, status: :internal_server_error
+  end
+
   def update_current_user_name
     update_current_user_name_input = UpdateCurrentUserNameInput.new(username: params[:username])
 
