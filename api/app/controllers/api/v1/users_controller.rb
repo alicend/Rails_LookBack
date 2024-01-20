@@ -1,5 +1,4 @@
 class Api::V1::UsersController < ApplicationController
-
   def index
     login_user_id = extract_user_id
     unless login_user_id
@@ -7,15 +6,15 @@ class Api::V1::UsersController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_id }).select('user_groups.id').first
+    login_user_group_id = UserGroup.joins(:users).where(users: { id: login_user_id }).select("user_groups.id").first
     Rails.logger.info("ログインユーザグループID : #{login_user_group_id}")
 
-    users = User.where(user_group_id: login_user_group_id)
-              .order(:name)
-              .select('id AS ID', 'name AS Name')
+    users = User.where(user_group_id: login_user_group_id).
+              order(:name).
+              select("id AS ID", "name AS Name")
     Rails.logger.info("ユーザのの取得に成功")
 
-    render json: { users: users }, status: :ok
+    render json: { users: }, status: :ok
   rescue => e
     Rails.logger.error("ユーザの取得に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
@@ -28,18 +27,18 @@ class Api::V1::UsersController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    user = User.left_joins(:user_group)
-              .select(
-                'users.id AS ID',
-                'users.email AS Email',
-                'users.name AS Name',
-                'users.user_group_id AS UserGroupID',
-                'user_groups.name AS UserGroup',
-                )
-                .find_by(id: login_user_id)
+    user = User.left_joins(:user_group).
+             select(
+               "users.id AS ID",
+               "users.email AS Email",
+               "users.name AS Name",
+               "users.user_group_id AS UserGroupID",
+               "user_groups.name AS UserGroup",
+             ).
+             find_by(id: login_user_id)
     Rails.logger.info("ログインユーザのの取得に成功")
 
-    render json: { user: user }, status: :ok
+    render json: { user: }, status: :ok
   rescue => e
     Rails.logger.error("ログインユーザの取得に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
@@ -74,18 +73,18 @@ class Api::V1::UsersController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    user = User.left_joins(:user_group)
-              .select(
-                'users.id AS ID',
-                'users.email AS Email',
-                'users.name AS Name',
-                'users.user_group_id AS UserGroupID',
-                'user_groups.name AS UserGroup',
-                )
-                .find_by(id: login_user_id)
+    user = User.left_joins(:user_group).
+             select(
+               "users.id AS ID",
+               "users.email AS Email",
+               "users.name AS Name",
+               "users.user_group_id AS UserGroupID",
+               "user_groups.name AS UserGroup",
+             ).
+             find_by(id: login_user_id)
     Rails.logger.info("ログインユーザのの取得に成功")
 
-    render json: { user: user }, status: :ok
+    render json: { user: }, status: :ok
   end
 
   def send_email_reset_password
@@ -99,7 +98,7 @@ class Api::V1::UsersController < ApplicationController
 
     # メールアドレスが登録済みか確認
     user = User.find_by(email: password_pre_reset_input.email)
-    unless user.present?
+    if user.blank?
       logger.error "入力したメールアドレスは未登録です"
       return render json: { error: "入力したメールアドレスは未登録です" }, status: :bad_request
     end
@@ -109,7 +108,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       PasswordResetMailer.password_reset_email(email: password_pre_reset_input.email).deliver_now
     rescue => e
-      logger.error "メールの送信に失敗しました"
+      logger.error e.message
       return render json: { error: "メールの送信に失敗しました" }, status: :internal_server_error
     end
 
@@ -128,7 +127,7 @@ class Api::V1::UsersController < ApplicationController
 
     # メールアドレスが登録済みか確認
     user = User.find_by(email: password_reset_input.email)
-    unless user.present?
+    if user.blank?
       logger.error "ユーザが存在しません"
       return render json: { error: "ユーザが存在しません" }, status: :bad_request
     end
@@ -158,18 +157,18 @@ class Api::V1::UsersController < ApplicationController
     )
     Rails.logger.info("ログインユーザのユーザ名の更新に成功")
 
-    user = User.left_joins(:user_group)
-              .select(
-                'users.id AS ID',
-                'users.email AS Email',
-                'users.name AS Name',
-                'users.user_group_id AS UserGroupID',
-                'user_groups.name AS UserGroup',
-                )
-                .find_by(id: login_user_id)
+    user = User.left_joins(:user_group).
+             select(
+               "users.id AS ID",
+               "users.email AS Email",
+               "users.name AS Name",
+               "users.user_group_id AS UserGroupID",
+               "user_groups.name AS UserGroup",
+             ).
+             find_by(id: login_user_id)
     Rails.logger.info("ログインユーザのの取得に成功")
 
-    render json: { user: user }, status: :ok
+    render json: { user: }, status: :ok
   rescue => e
     Rails.logger.error("ログインユーザのユーザ名の更新に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
@@ -187,7 +186,7 @@ class Api::V1::UsersController < ApplicationController
     # 入力したパスワードが正しいか確認
     user = User.find(login_user_id)
     unless user.authenticate(update_current_user_password_input.current_password)
-      render json: { error: 'パスワードが違います' }, status: :bad_request
+      render json: { error: "パスワードが違います" }, status: :bad_request
       return
     end
 
@@ -197,25 +196,24 @@ class Api::V1::UsersController < ApplicationController
     )
     Rails.logger.info("ログインユーザのパスワードの更新に成功")
 
-    user = User.left_joins(:user_group)
-              .select(
-                'users.id AS ID',
-                'users.email AS Email',
-                'users.name AS Name',
-                'users.user_group_id AS UserGroupID',
-                'user_groups.name AS UserGroup',
-                )
-                .find_by(id: login_user_id)
+    user = User.left_joins(:user_group).
+             select(
+               "users.id AS ID",
+               "users.email AS Email",
+               "users.name AS Name",
+               "users.user_group_id AS UserGroupID",
+               "user_groups.name AS UserGroup",
+             ).
+             find_by(id: login_user_id)
     Rails.logger.info("ログインユーザのの取得に成功")
 
-    render json: { user: user }, status: :ok
+    render json: { user: }, status: :ok
   rescue => e
     Rails.logger.error("ログインユーザのパスワードの更新に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
 
   def destroy
-
     login_user_id = extract_user_id
     unless login_user_id
       Rails.logger.error("CookieからユーザIDの抽出に失敗")
@@ -235,5 +233,4 @@ class Api::V1::UsersController < ApplicationController
     Rails.logger.error("ユーザの削除に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
-
 end
