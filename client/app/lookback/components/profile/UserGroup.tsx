@@ -46,7 +46,10 @@ const UserGroup: FC<Props> = React.memo(({ userGroup, loginStatus }) => {
 
   const update = async () => {
     await dispatch(
-      fetchAsyncUpdateUserGroupName({ id: userGroup.ID, userGroup: newUserGroup }),
+      fetchAsyncUpdateUserGroupName({
+        id: userGroup.ID,
+        userGroup: newUserGroup,
+      }),
     );
   };
 

@@ -87,8 +87,6 @@ const SignUp: React.FC<Props> = ({ email, userGroupID }) => {
     password: "",
     user_group: "",
   });
-  console.log(userGroupID)
-  console.log(userGroupID)
 
   let isDisabled = true;
   if (userGroupID !== "") {
@@ -230,7 +228,9 @@ const SignUp: React.FC<Props> = ({ email, userGroupID }) => {
           />
         </Grid>
 
-        {userGroupID !== "" ? "" : (
+        {userGroupID !== "" ? (
+          ""
+        ) : (
           <>
             <br />
             <Grid item>
