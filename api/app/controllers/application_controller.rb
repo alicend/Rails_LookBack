@@ -24,7 +24,7 @@ class ApplicationController < ActionController::API
         Rails.logger.error("認証情報が存在しません")
         render json: { error: "Authentication token is missing" }, status: :unauthorized and return
       end
-    
+
       begin
         decoded_token = JwtToken.parse_session_token(token)
         user_id = decoded_token[0]["user_id"]
@@ -37,5 +37,4 @@ class ApplicationController < ActionController::API
         render json: { error: e.message }, status: :unauthorized and return
       end
     end
-
 end
