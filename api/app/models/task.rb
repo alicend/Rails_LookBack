@@ -1,6 +1,6 @@
 class Task < ApplicationRecord
-  belongs_to :creator, class_name: "User"
-  belongs_to :responsible, class_name: "User"
+  belongs_to :creator, class_name: "User", inverse_of: :created_tasks
+  belongs_to :responsible, class_name: "User", inverse_of: :responsible_tasks
   belongs_to :category
 
   validates :task, presence: true, length: { minimum: 1, maximum: 30 }

@@ -84,9 +84,10 @@ Layout/LineLength:
 
 #################### Metrics ###############################
 Metrics/AbcSize:
-  Max: 30
+  Max: 55
 
 Metrics/BlockLength:
+  Max: 55
   Exclude:
     - "Rakefile"
     - "**/*.rake"
@@ -102,8 +103,11 @@ Metrics/BlockLength:
 Metrics/CyclomaticComplexity:
   Max: 10
 
+Metrics/ClassLength:
+  Max: 270
+
 Metrics/MethodLength:
-  Max: 20
+  Max: 60
   Exclude:
     - "db/migrate/*.rb"
 

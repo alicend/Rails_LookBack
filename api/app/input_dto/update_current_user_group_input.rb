@@ -2,7 +2,7 @@ class UpdateCurrentUserGroupInput
   include ActiveModel::Model
   include ActiveModel::Validations
 
-  attr_accessor :userGroup
+  attr_accessor :user_group
 
-  validates :userGroup, presence: true, length: { minimum: 1, maximum: 30 }
+  validates :user_group, presence: true, length: { minimum: 1, maximum: 30 }
 end
