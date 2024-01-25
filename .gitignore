@@ -2,6 +2,7 @@ api/log/
 api/tmp/
 api/vendor/bundle/
 api/storage/
+api/config/master.key
 .vscode/
 client/app/lookback/.next/
 client/app/lookback/node_modules/
