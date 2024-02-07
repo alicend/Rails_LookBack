@@ -2,66 +2,63 @@ require "rails_helper"
 
 RSpec.describe User, type: :model do
   # ユーザーの有効性のテスト
-  describe "validations" do
-    it "is valid with valid attributes" do
+  describe "ヴァリデーション" do
+    it "有効な属性の場合は有効" do
       user_group = UserGroup.create!(name: "Example Group")
       user = User.new(name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       expect(user).to be_valid
     end
 
-    it "is invalid without a name" do
+    it "名前がない場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       user = User.new(name: nil, email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       expect(user).not_to be_valid
     end
 
-    it "is invalid without an email" do
+    it "メールがない場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       user = User.new(name: "John Doe", email: nil, password: "password", password_confirmation: "password", user_group:)
       expect(user).not_to be_valid
     end
 
-    it "is invalid with a duplicate email" do
+    it "メールが重複している場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       User.create!(name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       user = User.new(name: "Jane Doe", email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       expect(user).not_to be_valid
     end
 
-    it "is invalid with a name too long" do
+    it "名前が31文字以上の場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       name = "a" * 31
       user = User.new(name:, email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       expect(user).not_to be_valid
     end
 
-    it "is invalid with an email too long" do
+    it "メールが256文字以上の場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       email = "#{"a" * 244}@example.com"
       user = User.new(name: "John Doe", email:, password: "password", password_confirmation: "password", user_group:)
       expect(user).not_to be_valid
     end
-  end
 
-  # アソシエーションのテスト
-  describe "associations" do
-    it { should belong_to(:user_group) }
-    it { should have_many(:created_tasks).with_foreign_key("creator_id").dependent(:destroy).class_name("Task") }
-    it { should have_many(:responsible_tasks).with_foreign_key("responsible_id").dependent(:destroy).class_name("Task") }
-  end
-
-  # パスワードの検証
-  describe "password" do
-    it "is valid with a password and password_confirmation" do
+    it "パスワードがない場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
-      user = User.new(name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
-      expect(user).to be_valid
+      user = User.new(name: "John Doe", email: "john@example.com", password: nil, password_confirmation: "password", user_group:)
+      expect(user).not_to be_valid
     end
 
-    it "is invalid when password does not match confirmation" do
+    it "パスワードとパスワード確認が一致しない場合は無効" do
       user_group = UserGroup.create!(name: "Example Group")
       user = User.new(name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "different", user_group:)
       expect(user).not_to be_valid
     end
+  end
+
+  # アソシエーションのテスト
+  describe "アソシエーション" do
+    it { should belong_to(:user_group) }
+    it { should have_many(:created_tasks).with_foreign_key("creator_id").dependent(:destroy).class_name("Task") }
+    it { should have_many(:responsible_tasks).with_foreign_key("responsible_id").dependent(:destroy).class_name("Task") }
   end
 end
