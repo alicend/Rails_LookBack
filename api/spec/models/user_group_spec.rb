@@ -26,12 +26,7 @@ RSpec.describe UserGroup, type: :model do
 
   # アソシエーションのテスト
   describe "アソシエーション" do
-    it "多数のユーザーを持ち、ユーザーグループが削除されるとユーザーも削除される" do
-      should have_many(:users).dependent(:destroy)
-    end
-
-    it "多数のカテゴリーを持ち、ユーザーグループが削除されるとカテゴリーも削除される" do
-      should have_many(:categories).dependent(:destroy)
-    end
+    it { is_expected.to have_many(:users).dependent(:destroy) }
+    it { is_expected.to have_many(:categories).dependent(:destroy) }
   end
 end
