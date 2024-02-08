@@ -6,7 +6,6 @@ RSpec.describe AuthMailer, type: :mailer do
     let(:mail) { AuthMailer.sign_up_email(email: user_email) }
 
     before do
-      # JwtToken.generate_email_tokenの結果をスタブ化
       allow(JwtToken).to receive(:generate_email_token).with(user_email).and_return("email_token")
     end
 
