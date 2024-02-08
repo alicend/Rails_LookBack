@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe User, type: :model do
   # ユーザーの有効性のテスト
   describe "ヴァリデーション" do
-    it "有効な属性の場合は有効" do
+    it "全ての項目が有効" do
       user_group = UserGroup.create!(name: "Example Group")
       user = User.new(name: "John Doe", email: "john@example.com", password: "password", password_confirmation: "password", user_group:)
       expect(user).to be_valid
