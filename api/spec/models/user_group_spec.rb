@@ -19,7 +19,8 @@ RSpec.describe UserGroup, type: :model do
     end
 
     it "名前が31文字以上の場合は無効" do
-      user_group = UserGroup.new(name: "a" * 31)
+      name = "a" * 31
+      user_group = UserGroup.new(name:)
       expect(user_group).not_to be_valid
     end
   end
