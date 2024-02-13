@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe User, type: :model do
-  # ユーザーの有効性のテスト
   describe "ヴァリデーション" do
     it "全ての項目が有効" do
       user_group = UserGroup.create!(name: "Example Group")

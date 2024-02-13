@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe UserGroup, type: :model do
-  # バリデーションのテスト
-  describe "バリデーション" do
+  describe "ヴァリデーション" do
     it "全ての項目が有効" do
       user_group = UserGroup.new(name: "Example Group")
       expect(user_group).to be_valid

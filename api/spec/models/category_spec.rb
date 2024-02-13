@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Category, type: :model do
-  # バリデーションのテスト
-  describe "バリデーション" do
+  describe "ヴァリデーション" do
     it "有効なカテゴリ名がある場合は有効" do
       user_group = UserGroup.create!(name: "Example User Group")
       category = Category.new(category: "Example Category", user_group:)

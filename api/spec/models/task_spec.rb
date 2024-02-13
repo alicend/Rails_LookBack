@@ -1,8 +1,7 @@
 require "rails_helper"
 
 RSpec.describe Task, type: :model do
-  # バリデーションのテスト
-  describe "validations" do
+  describe "ヴァリデーション" do
     it "全ての項目が有効" do
       user_group = UserGroup.create!(name: "Example Group")
       creator = User.create!(name: "Creator User", email: "creator@example.com", password: "password", user_group:)
