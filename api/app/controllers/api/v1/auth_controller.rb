@@ -125,7 +125,7 @@ class Api::V1::AuthController < ApplicationController
 
     user = User.find_by(email: login_input.email)
     if user.nil?
-      render json: { error: "存在しないユーザです" }, status: :not_found
+      render json: { error: "存在しないユーザです" }, status: :bad_request
       return
     end
 
