@@ -9,14 +9,14 @@ RSpec.describe "AuthController", type: :request do
     let!(:user_group) { UserGroup.create!(name: "Example Group") }
     let!(:user) { User.create!(name: "TestUser", email: used_email, password: "password", password_confirmation: "password", user_group:) }
 
-    it "メール送信が成功した場合は200 OKを返す" do
+    it "メール送信が成功した場合はステータスコード:200 OKを返す" do
       mail_delivery_double = instance_double("ActionMailer::MessageDelivery", deliver_now: true)
       allow(AuthMailer).to receive(:sign_up_email).with(email: valid_email).and_return(mail_delivery_double)
       post "/api/v1/signup/request", params: { auth: { email: valid_email }, email: valid_email }
       expect(response).to have_http_status(:ok)
     end
 
-    it "無効な入力の場合はバッドリクエストを返す" do
+    it "無効な入力の場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/signup/request", params: { auth: { email: invalid_email }, email: invalid_email }
       expect(response).to have_http_status(:bad_request)
     end
@@ -26,7 +26,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "既に使用されているメールアドレスの場合はバッドリクエストを返す" do
+    it "既に使用されているメールアドレスの場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/signup/request", params: { auth: { email: used_email }, email: used_email }
       expect(response).to have_http_status(:bad_request)
     end
@@ -36,7 +36,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "メール送信に失敗したの場合はサーバーエラーを返す" do
+    it "メール送信に失敗したの場合はステータスコード:500 サーバーエラーを返す" do
       allow(AuthMailer).to receive(:sign_up_email).with(email: valid_email).and_raise("メール送信エラー")
       post "/api/v1/signup/request", params: { auth: { email: valid_email }, email: valid_email }
       expect(response).to have_http_status(:internal_server_error)
@@ -57,13 +57,13 @@ RSpec.describe "AuthController", type: :request do
     let!(:user_group) { UserGroup.create!(name: "Example Group") }
     let!(:user) { User.create!(name: "TestUser", email: used_email, password: "password", password_confirmation: "password", user_group:) }
 
-    it "メール送信が成功した場合は200 OKを返す" do
+    it "メール送信が成功した場合はステータスコード:200 OKを返す" do
       cookies[:access_token] = JwtToken.generate_session_token(user.id)
       post "/api/v1/invite/request", params: { auth: { email: valid_email }, email: valid_email }
       expect(response).to have_http_status(:ok)
     end
 
-    it "無効な入力の場合はバッドリクエストを返す" do
+    it "無効な入力の場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/invite/request", params: { auth: { email: invalid_email }, email: invalid_email }
       expect(response).to have_http_status(:bad_request)
     end
@@ -73,7 +73,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "既に使用されているメールアドレスの場合はバッドリクエストを返す" do
+    it "既に使用されているメールアドレスの場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/invite/request", params: { auth: { email: used_email }, email: used_email }
       expect(response).to have_http_status(:bad_request)
     end
@@ -83,7 +83,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "メール送信に失敗したの場合はサーバーエラーを返す" do
+    it "メール送信に失敗したの場合はステータスコード:500 サーバーエラーを返す" do
       allow(AuthMailer).to receive(:sign_up_email).with(email: valid_email).and_raise("メール送信エラー")
       post "/api/v1/invite/request", params: { auth: { email: valid_email }, email: valid_email }
       expect(response).to have_http_status(:internal_server_error)
@@ -95,7 +95,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "CookieからユーザIDの取得に失敗した場合はサーバーエラーを返す" do
+    it "CookieからユーザIDの取得に失敗した場合はステータスコード:500 サーバーエラーを返す" do
       post "/api/v1/invite/request", params: { auth: { email: valid_email }, email: valid_email }
       expect(response).to have_http_status(:internal_server_error)
     end
@@ -125,7 +125,7 @@ RSpec.describe "AuthController", type: :request do
       }
     }
 
-    it "ユーザ作成に成功した場合は200 OKを返す" do
+    it "ユーザ作成に成功した場合はステータスコード:200 OKを返す" do
       post "/api/v1/signup", params: { auth: valid_attributes }
       expect(response).to have_http_status(:ok)
     end
@@ -147,7 +147,7 @@ RSpec.describe "AuthController", type: :request do
       }.to change { User.count }.by(1)
     end
 
-    it "無効な入力の場合はバッドリクエストを返す" do
+    it "無効な入力の場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/signup", params: { auth: invalid_attributes }
       expect(response).to have_http_status(:bad_request)
     end
@@ -190,7 +190,7 @@ RSpec.describe "AuthController", type: :request do
       }
     }
 
-    it "ユーザ作成に成功した場合は200 OKを返す" do
+    it "ユーザ作成に成功した場合はステータスコード:200 OKを返す" do
       post "/api/v1/invite/signup", params: { auth: valid_attributes }
       expect(response).to have_http_status(:ok)
     end
@@ -206,7 +206,7 @@ RSpec.describe "AuthController", type: :request do
       }.to change { User.count }.by(1)
     end
 
-    it "無効な入力の場合はバッドリクエストを返す" do
+    it "無効な入力の場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/invite/signup", params: { auth: invalid_attributes }
       expect(response).to have_http_status(:bad_request)
     end
@@ -232,12 +232,12 @@ RSpec.describe "AuthController", type: :request do
     let(:not_exist_attributes) { { password: "password", email: "not_exist@example.com" } }
     let(:dif_password_attributes) { { password: "dif_password", email: "test@example.com" } }
 
-    it "ログインに成功した場合は200 OKを返す" do
+    it "ログインに成功した場合はステータスコード:200 OKを返す" do
       post "/api/v1/login", params: { auth: valid_attributes }
       expect(response).to have_http_status(:ok)
     end
 
-    it "無効な入力の場合はバッドリクエストを返す" do
+    it "無効な入力の場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/login", params: { auth: invalid_attributes }
       expect(response).to have_http_status(:bad_request)
     end
@@ -247,7 +247,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "存在しないユーザを入力した場合はバッドリクエストを返す" do
+    it "存在しないユーザを入力した場合はステータスコード:400 バッドリクエストを返す" do
       post "/api/v1/login", params: { auth: not_exist_attributes }
       expect(response).to have_http_status(:bad_request)
     end
@@ -257,7 +257,7 @@ RSpec.describe "AuthController", type: :request do
       expect(JSON.parse(response.body)).to have_key("error")
     end
 
-    it "間違ったパスワードを入力した場合はバッドリクエストを返す" do
+    it "間違ったパスワードを入力した場合はステータスコード:401 未認証を返す" do
       post "/api/v1/login", params: { auth: dif_password_attributes }
       expect(response).to have_http_status(:unauthorized)
     end
@@ -269,7 +269,7 @@ RSpec.describe "AuthController", type: :request do
   end
 
   describe "GET /api/v1/login/guest guest_login" do
-    it "ログインに成功した場合は200 OKを返す" do
+    it "ログインに成功した場合はステータスコード:200 OKを返す" do
       get "/api/v1/login/guest"
       expect(response).to have_http_status(:ok)
     end
@@ -282,7 +282,7 @@ RSpec.describe "AuthController", type: :request do
   end
 
   describe "GET /api/v1/logout logout" do
-    it "ログインに成功した場合は200 OKを返す" do
+    it "ログインに成功した場合はステータスコード:200 OKを返す" do
       cookies[:access_token] = JwtToken.generate_session_token(1)
       cookies[:guest_login] = "true"
       get "/api/v1/logout"
