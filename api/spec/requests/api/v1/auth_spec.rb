@@ -23,7 +23,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "無効な入力の場合はエラーを返す" do
       post "/api/v1/signup/request", params: { auth: { email: invalid_email }, email: invalid_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "既に使用されているメールアドレスの場合はバッドリクエストを返す" do
@@ -33,7 +33,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "既に使用されているメールアドレスの場合はエラーを返す" do
       post "/api/v1/signup/request", params: { auth: { email: used_email }, email: used_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "メール送信に失敗したの場合はサーバーエラーを返す" do
@@ -45,7 +45,7 @@ RSpec.describe "AuthController", type: :request do
     it "メール送信に失敗したの場合はエラーを返す" do
       allow(AuthMailer).to receive(:sign_up_email).with(email: valid_email).and_raise("メール送信エラー")
       post "/api/v1/signup/request", params: { auth: { email: valid_email }, email: valid_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
   end
 
@@ -70,7 +70,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "無効な入力の場合はエラーを返す" do
       post "/api/v1/invite/request", params: { auth: { email: invalid_email }, email: invalid_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "既に使用されているメールアドレスの場合はバッドリクエストを返す" do
@@ -80,7 +80,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "既に使用されているメールアドレスの場合はエラーを返す" do
       post "/api/v1/invite/request", params: { auth: { email: used_email }, email: used_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "メール送信に失敗したの場合はサーバーエラーを返す" do
@@ -92,7 +92,7 @@ RSpec.describe "AuthController", type: :request do
     it "メール送信に失敗したの場合はエラーを返す" do
       allow(AuthMailer).to receive(:sign_up_email).with(email: valid_email).and_raise("メール送信エラー")
       post "/api/v1/invite/request", params: { auth: { email: valid_email }, email: valid_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "CookieからユーザIDの取得に失敗した場合はサーバーエラーを返す" do
@@ -102,7 +102,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "CookieからユーザIDの取得に失敗した場合はエラーを返す" do
       post "/api/v1/invite/request", params: { auth: { email: valid_email }, email: valid_email }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
   end
 
@@ -132,7 +132,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "ユーザ作成に成功した場合はユーザIDを返す" do
       post "/api/v1/signup", params: { auth: valid_attributes }
-      expect(JSON.parse(response.body)).to have_key('user_id')
+      expect(JSON.parse(response.body)).to have_key("user_id")
     end
 
     it "ユーザグループ作成に成功" do
@@ -154,7 +154,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "無効な入力の場合はエラーを返す" do
       post "/api/v1/signup", params: { auth: invalid_attributes }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "無効な入力の場合はユーザグループを作成しない" do
@@ -197,7 +197,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "ユーザ作成に成功した場合はユーザIDを返す" do
       post "/api/v1/signup", params: { auth: valid_attributes }
-      expect(JSON.parse(response.body)).to have_key('user_id')
+      expect(JSON.parse(response.body)).to have_key("user_id")
     end
 
     it "ユーザ作成に成功" do
@@ -213,7 +213,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "無効な入力の場合はエラーを返す" do
       post "/api/v1/signup", params: { auth: invalid_attributes }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "無効な入力の場合はユーザを作成しない" do
@@ -244,7 +244,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "無効な入力の場合はエラーを返す" do
       post "/api/v1/signup", params: { auth: invalid_attributes }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "存在しないユーザを入力した場合はバッドリクエストを返す" do
@@ -254,7 +254,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "存在しないユーザを入力した場合はエラーを返す" do
       post "/api/v1/login", params: { auth: not_exist_attributes }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
 
     it "間違ったパスワードを入力した場合はバッドリクエストを返す" do
@@ -264,7 +264,7 @@ RSpec.describe "AuthController", type: :request do
 
     it "間違ったパスワードを入力した場合はエラーを返す" do
       post "/api/v1/login", params: { auth: dif_password_attributes }
-      expect(JSON.parse(response.body)).to have_key('error')
+      expect(JSON.parse(response.body)).to have_key("error")
     end
   end
 
