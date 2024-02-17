@@ -99,17 +99,17 @@ RSpec.describe "Categories", type: :request do
         cookies[:access_token] = JwtToken.generate_session_token(user.id)
       end
 
-      it "カテゴリーの作成に成功した場合はステータスコード:200 OKを返す" do
+      it "カテゴリーの更新に成功した場合はステータスコード:200 OKを返す" do
         put "/api/v1/categories/#{category.id}", params: valid_attributes
         expect(response).to have_http_status(:ok)
       end
 
-      it "カテゴリーの作成に成功した場合はレスポンスにカテゴリーが含まれる" do
+      it "カテゴリーの更新に成功した場合はレスポンスにカテゴリーが含まれる" do
         put "/api/v1/categories/#{category.id}", params: valid_attributes
         expect(JSON.parse(response.body)).to have_key("categories")
       end
 
-      it "カテゴリーの作成に成功した場合はレスポンスにタスクが含まれる" do
+      it "カテゴリーの更新に成功した場合はレスポンスにタスクが含まれる" do
         put "/api/v1/categories/#{category.id}", params: valid_attributes
         expect(JSON.parse(response.body)).to have_key("tasks")
       end
@@ -154,17 +154,17 @@ RSpec.describe "Categories", type: :request do
         cookies[:access_token] = JwtToken.generate_session_token(user.id)
       end
 
-      it "カテゴリーの作成に成功した場合はステータスコード:200 OKを返す" do
+      it "カテゴリーの削除に成功した場合はステータスコード:200 OKを返す" do
         delete "/api/v1/categories/#{category.id}"
         expect(response).to have_http_status(:ok)
       end
 
-      it "カテゴリーの作成に成功した場合はレスポンスにカテゴリーが含まれる" do
+      it "カテゴリーの削除に成功した場合はレスポンスにカテゴリーが含まれる" do
         delete "/api/v1/categories/#{category.id}"
         expect(JSON.parse(response.body)).to have_key("categories")
       end
 
-      it "カテゴリーの作成に成功した場合はレスポンスにタスクが含まれる" do
+      it "カテゴリーの削除に成功した場合はレスポンスにタスクが含まれる" do
         delete "/api/v1/categories/#{category.id}"
         expect(JSON.parse(response.body)).to have_key("tasks")
       end
