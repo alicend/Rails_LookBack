@@ -87,7 +87,7 @@ class Api::V1::TasksController < ApplicationController
 
     unless create_task_input.valid?
       Rails.logger.error(create_task_input.errors.full_messages)
-      render json: { errors: create_task_input.errors.full_messages }, status: :bad_request
+      render json: { error: create_task_input.errors.full_messages }, status: :bad_request
       return
     end
 
@@ -149,7 +149,7 @@ class Api::V1::TasksController < ApplicationController
 
     unless update_task_input.valid?
       Rails.logger.error(update_task_input.errors.full_messages)
-      render json: { errors: update_task_input.errors.full_messages }, status: :bad_request
+      render json: { error: update_task_input.errors.full_messages }, status: :bad_request
       return
     end
 
