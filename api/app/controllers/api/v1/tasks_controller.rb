@@ -210,7 +210,7 @@ class Api::V1::TasksController < ApplicationController
   def update_to_completed
     # タスクを更新
     task = Task.find(params[:id])
-    task.update!(status: 3)
+    task.update!(status: 4)
     Rails.logger.info("タスクの更新に成功")
 
     login_user_id = extract_user_id
