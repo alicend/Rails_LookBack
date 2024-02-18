@@ -51,7 +51,7 @@ class Api::V1::UsersController < ApplicationController
 
     unless send_update_email_input.valid?
       Rails.logger.error(send_update_email_input.errors.full_messages)
-      render json: { errors: send_update_email_input.errors.full_messages }, status: :bad_request
+      render json: { error: send_update_email_input.errors.full_messages }, status: :bad_request
       return
     end
 
@@ -121,7 +121,6 @@ class Api::V1::UsersController < ApplicationController
     password_reset_input = PasswordResetInput.new(email: params[:email], password: params[:password])
 
     unless password_reset_input.valid?
-      Rails.logger.error(password_reset_input.errors.full_messages)
       logger.error password_reset_input.errors.full_messages
       render json: { error: password_reset_input.errors.full_messages }, status: :bad_request
       return
@@ -145,6 +144,11 @@ class Api::V1::UsersController < ApplicationController
 
   def update_current_user_email
     update_current_user_email_input = UpdateCurrentUserEmailInput.new(email: params[:email])
+    unless update_current_user_email_input.valid?
+      logger.error update_current_user_email_input.errors.full_messages
+      render json: { error: update_current_user_email_input.errors.full_messages }, status: :bad_request
+      return
+    end
 
     login_user_id = extract_user_id
     unless login_user_id
@@ -152,7 +156,7 @@ class Api::V1::UsersController < ApplicationController
       return render json: { error: "Failed to extract user ID" }, status: :internal_server_error
     end
 
-    # ログインユーザのユーザ名を更新
+    # ログインユーザのメールアドレスを更新
     user = User.find(login_user_id)
     user.update!(
       email: update_current_user_email_input.email,
@@ -178,6 +182,12 @@ class Api::V1::UsersController < ApplicationController
 
   def update_current_user_name
     update_current_user_name_input = UpdateCurrentUserNameInput.new(username: params[:username])
+
+    unless update_current_user_name_input.valid?
+      logger.error update_current_user_name_input.errors.full_messages
+      render json: { error: update_current_user_name_input.errors.full_messages }, status: :bad_request
+      return
+    end
 
     login_user_id = extract_user_id
     unless login_user_id
@@ -211,6 +221,12 @@ class Api::V1::UsersController < ApplicationController
 
   def update_current_user_password
     update_current_user_password_input = UpdateCurrentUserPasswordInput.new(current_password: params[:current_password], new_password: params[:new_password])
+
+    unless update_current_user_password_input.valid?
+      logger.error update_current_user_password_input.errors.full_messages
+      render json: { error: update_current_user_password_input.errors.full_messages }, status: :bad_request
+      return
+    end
 
     login_user_id = extract_user_id
     unless login_user_id

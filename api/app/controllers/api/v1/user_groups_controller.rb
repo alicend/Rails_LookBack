@@ -4,11 +4,16 @@ class Api::V1::UserGroupsController < ApplicationController
   def update
     update_current_user_group_input = UpdateCurrentUserGroupInput.new(user_group: params[:userGroup])
 
+    unless update_current_user_group_input.valid?
+      Rails.logger.error(update_current_user_group_input.errors.full_messages)
+      render json: { error: update_current_user_group_input.errors.full_messages }, status: :bad_request
+      return
+    end
+
     user_group = UserGroup.find(params[:id])
     user_group.update!(
       name: update_current_user_group_input.user_group,
     )
-    Rails.logger.info("ユーザグループ名の更新に成功")
 
     login_user_id = extract_user_id
     unless login_user_id

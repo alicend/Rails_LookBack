@@ -27,7 +27,7 @@ class Api::V1::CategoriesController < ApplicationController
 
     unless create_category_input.valid?
       Rails.logger.error(create_category_input.errors.full_messages)
-      render json: { errors: create_category_input.errors.full_messages }, status: :bad_request
+      render json: { error: create_category_input.errors.full_messages }, status: :bad_request
       return
     end
 
@@ -60,7 +60,7 @@ class Api::V1::CategoriesController < ApplicationController
 
     unless update_category_input.valid?
       Rails.logger.error(update_category_input.errors.full_messages)
-      render json: { errors: update_category_input.errors.full_messages }, status: :bad_request
+      render json: { error: update_category_input.errors.full_messages }, status: :bad_request
       return
     end
 

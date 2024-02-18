@@ -4,7 +4,7 @@ class Api::V1::AuthController < ApplicationController
 
     unless user_pre_sigh_up_input.valid?
       Rails.logger.error(user_pre_sigh_up_input.errors.full_messages)
-      render json: { errors: user_pre_sigh_up_input.errors.full_messages }, status: :bad_request
+      render json: { error: user_pre_sigh_up_input.errors.full_messages }, status: :bad_request
       return
     end
 
@@ -30,7 +30,7 @@ class Api::V1::AuthController < ApplicationController
 
     unless invite_email_input.valid?
       Rails.logger.error(invite_email_input.errors.full_messages)
-      render json: { errors: invite_email_input.errors.full_messages }, status: :bad_request
+      render json: { error: invite_email_input.errors.full_messages }, status: :bad_request
       return
     end
 
@@ -125,7 +125,7 @@ class Api::V1::AuthController < ApplicationController
 
     user = User.find_by(email: login_input.email)
     if user.nil?
-      render json: { error: "存在しないユーザです" }, status: :not_found
+      render json: { error: "存在しないユーザです" }, status: :bad_request
       return
     end
 
