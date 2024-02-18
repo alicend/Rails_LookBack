@@ -282,7 +282,7 @@ RSpec.describe "AuthController", type: :request do
   end
 
   describe "GET /api/v1/logout logout" do
-    it "ログインに成功した場合はステータスコード:200 OKを返す" do
+    it "ログアウトに成功した場合はステータスコード:200 OKを返す" do
       cookies[:access_token] = JwtToken.generate_session_token(1)
       cookies[:guest_login] = "true"
       get "/api/v1/logout"
