@@ -41,7 +41,7 @@ export const fetchAsyncGuestLogin = createAsyncThunk(
         `${ENDPOINTS.LOGIN}/guest`,
         COMMON_HTTP_HEADER,
       );
-      
+
       return res.data;
     } catch (err: any) {
       return handleHttpError(err, thunkAPI);
@@ -373,7 +373,7 @@ export const userSlice = createSlice({
         state.loginUser = action.payload;
         state.message = "ゲストログインに成功しました";
         router.push("/task-board");
-      }
+      },
     );
     builder.addCase(fetchAsyncGuestLogin.rejected, handleLoginError);
     builder.addCase(fetchAsyncGuestLogin.pending, handleLoading);
@@ -383,7 +383,7 @@ export const userSlice = createSlice({
         state.loginUser = action.payload;
         state.message = "ログインに成功しました";
         router.push("/task-board");
-      }
+      },
     );
     builder.addCase(fetchAsyncLogin.rejected, handleLoginError);
     builder.addCase(fetchAsyncLogin.pending, handleLoading);
