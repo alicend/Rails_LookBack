@@ -58,6 +58,23 @@ jobs:
       - name: Run rspec
         run: bundle exec rspec
 
+  # 処理② jest がオールグリーンであることをチェック
+  jest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: client/app/lookback
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install packages
+        run: npm install
+
+      - name: Run jest
+        run: npm run jest
+
   # 処理② rubocop のルール違反がないことをチェック
   rubocop:
     runs-on: ubuntu-latest
