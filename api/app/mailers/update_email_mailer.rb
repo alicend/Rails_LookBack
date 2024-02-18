@@ -1,5 +1,5 @@
 class UpdateEmailMailer < ApplicationMailer
-  default from: "Look Back Calendar <no-reply@lookback-calendar.com>"
+  default from: "Look Back Calendar <no-reply@#{Settings.email_domain}>"
 
   def update_email_email(email:)
     email_token = JwtToken.generate_email_token(email)

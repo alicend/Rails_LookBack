@@ -1,5 +1,6 @@
 front_domain: http://localhost:8000
+email_domain: lookback-calendar.net
 session_secret_key: ir/XFY9+kMQPwYa79up/NSdBFdarQcR5xabJ0boQFOQ
 email_secret_key: VprazmTirzfeQ3aLVv97xICyYsRnIIgUCkS1ZUqo358
 user_group_id_secret_key: QpQD44iLt3m9EZKw8dxWXzJYdey7e2QWJ4Hj2NrgZSk
-resend_api_key: re_N6KKqHWB_9AD1TQBef2NDhh8LMFgRnntC
+resend_api_key: re_PGR1ckpb_FWwNc2VZ7hnkfqUh7eejjd9Z

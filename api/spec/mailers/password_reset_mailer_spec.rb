@@ -18,7 +18,7 @@ RSpec.describe PasswordResetMailer, type: :mailer do
     end
 
     it "送信元が正しいこと" do
-      expect(mail.from).to eq(["no-reply@lookback-calendar.com"])
+      expect(mail.from).to eq(["no-reply@#{Settings.email_domain}"])
     end
 
     it "メール本文にパスワード更新URLが含まれていること" do
