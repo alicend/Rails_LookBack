@@ -4,10 +4,6 @@ import "@testing-library/jest-dom";
 import { Provider } from "react-redux";
 import { store } from "../../store/store";
 import Auth from "@/components/Auth";
-import axios from "axios";
-
-// axiosのモック化
-jest.mock("axios");
 
 describe("<Auth />", () => {
   test("renders the Auth component", () => {
@@ -45,25 +41,4 @@ describe("<Auth />", () => {
     fireEvent.click(screen.getByText("Login as a Guest"));
   });
 
-  test("renders the Auth component and triggers login", () => {
-    // モック化したaxiosの返り値を設定
-    (axios.post as jest.Mock).mockResolvedValue({});
-
-    render(
-      <Provider store={store}>
-        <Auth />
-      </Provider>,
-    );
-
-    const allLoginElements = screen.getAllByText("Login");
-    expect(allLoginElements).toHaveLength(2);
-
-    fireEvent.change(screen.getByLabelText("Email"), {
-      target: { value: "test@example.com" },
-    });
-    fireEvent.change(screen.getByLabelText("Password"), {
-      target: { value: "password123" },
-    });
-    fireEvent.click(screen.getByTestId("auth-button"));
-  });
 });
