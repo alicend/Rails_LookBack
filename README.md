@@ -5,6 +5,8 @@ https://lookback-calendar.com/ <br >
 画面中部の「LOGIN AS A GUEST」ボタンから、メールアドレスとパスワードを入力せずにログインできます。
 
 # 使用技術
+- Next.js
+- MUI
 - Ruby 3.1.2
 - Ruby on Rails 7.0.8
 - MySQL 8.0.32
@@ -12,13 +14,13 @@ https://lookback-calendar.com/ <br >
 - Puma
 - AWS
   - VPC
-  - EC2
+  - Fargate
   - RDS
   - Route53
 - Docker/Docker-compose
-- Github Actions CI/CD
-- Capistrano3
+- Github Actions
 - RSpec
+- Jest
 
 # AWS構成図
 <img width="995" alt="" src="https://github.com/alicend/Rails_LookBack/assets/86368377/d9bef69e-fde5-49cb-b9d1-3f781d26dffc">
