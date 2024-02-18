@@ -51,7 +51,7 @@ class Api::V1::UsersController < ApplicationController
 
     unless send_update_email_input.valid?
       Rails.logger.error(send_update_email_input.errors.full_messages)
-      render json: { errors: send_update_email_input.errors.full_messages }, status: :bad_request
+      render json: { error: send_update_email_input.errors.full_messages }, status: :bad_request
       return
     end
 
