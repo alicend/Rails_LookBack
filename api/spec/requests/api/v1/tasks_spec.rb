@@ -255,7 +255,7 @@ RSpec.describe "Tasks", type: :request do
 
       it "タスクのステータスの更新に成功" do
         put "/api/v1/tasks/#{task.id}/to-completed"
-        expect(task.reload.status).to eq 4
+        expect(task.reload.status).to eq 3
       end
     end
 

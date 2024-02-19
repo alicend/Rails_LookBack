@@ -210,8 +210,8 @@ class Api::V1::TasksController < ApplicationController
   def update_to_completed
     # タスクを更新
     task = Task.find(params[:id])
-    task.update!(status: 4)
-    Rails.logger.info("タスクの更新に成功")
+    task.update!(status: 3)
+    Rails.logger.info("タスクのステータスを完了する更新に成功")
 
     login_user_id = extract_user_id
     unless login_user_id
@@ -249,7 +249,7 @@ class Api::V1::TasksController < ApplicationController
 
     render json: { tasks: }, status: :ok
   rescue => e
-    Rails.logger.error("ルックバック用のタスクの取得に失敗しました: #{e.message}")
+    Rails.logger.error("ルックバック用のタスクの更新に失敗しました: #{e.message}")
     render json: { error: e.message }, status: :internal_server_error
   end
 
