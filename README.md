@@ -26,7 +26,7 @@ https://lookback-calendar.com/ <br >
 # AWS構成図
 <img width="995" alt="" src="https://github.com/alicend/Rails_LookBack/assets/86368377/d9bef69e-fde5-49cb-b9d1-3f781d26dffc">
 
-## Github Actions CI/CD
+## Github Actions
 - Githubへのpush時に、「Rspec」「Jest」「Rubocop」「Eslint」が自動で実行されます。
 - mainブランチへのpush時に、上記の４つが成功した場合はAWS Fargateへの自動デプロイが実行されます。
 
