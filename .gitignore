@@ -7,3 +7,4 @@ client/app/lookback/.next/
 client/app/lookback/node_modules/
 vendor/bundle/
 .vscode/
+.env
