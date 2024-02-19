@@ -350,6 +350,8 @@ const handleLoading = (state: any) => {
   state.status = "loading";
 };
 
+const handleLoadingForInit = (state: any) => {};
+
 export const userSlice = createSlice({
   name: "user",
   initialState,
@@ -446,7 +448,7 @@ export const userSlice = createSlice({
       },
     );
     builder.addCase(fetchAsyncGetLoginUser.rejected, handleError);
-    builder.addCase(fetchAsyncGetLoginUser.pending, handleLoading);
+    builder.addCase(fetchAsyncGetLoginUser.pending, handleLoadingForInit);
     builder.addCase(
       fetchAsyncUpdateLoginUserEmail.fulfilled,
       (state, action: PayloadAction<USER>) => {
