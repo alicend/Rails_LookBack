@@ -1,8 +1,6 @@
 # アプリケーション概要
 達成したタスクを見返すことで作業のモチベーションアップを目的とした、タスク管理ツールです。
 
-## 使用方法
-
 # URL
 https://lookback-calendar.com/ <br >
 画面中部の「LOGIN AS A GUEST」ボタンから、メールアドレスとパスワードを入力せずにログインできます。
@@ -35,12 +33,12 @@ https://lookback-calendar.com/ <br >
 - Github Actions
 - RSpec
 
-# AWS構成図
-<img width="995" alt="" src="https://github.com/alicend/Rails_LookBack/assets/86368377/d9bef69e-fde5-49cb-b9d1-3f781d26dffc">
-
 ## Github Actions
 - Githubへのpush時に、「Rspec」「Jest」「Rubocop」「Eslint」が自動で実行されます。
 - mainブランチへのpush時に、上記の４つが成功した場合はECS Fargateへの自動デプロイが実行されます。
+
+# AWS構成図
+<img width="995" alt="" src="https://github.com/alicend/Rails_LookBack/assets/86368377/d9bef69e-fde5-49cb-b9d1-3f781d26dffc">
 
 # 機能一覧
 - ユーザー登録、ログイン機能、ログアウト機能
