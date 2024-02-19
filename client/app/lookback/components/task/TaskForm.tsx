@@ -177,6 +177,7 @@ const TaskForm: React.FC = () => {
   return (
     <Grid container direction="column" style={{ minHeight: "80vh" }}>
       <h2 className="toScroll">{editedTask.ID ? "Update Task" : "New Task"}</h2>
+      <br></br>
       <form>
         <Grid container spacing={5}>
           <Grid item xs={12} md={6}>
