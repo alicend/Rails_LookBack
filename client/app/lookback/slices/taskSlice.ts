@@ -297,6 +297,8 @@ const handleLoading = (state: any) => {
   state.status = "loading";
 };
 
+const handleLoadingForInit = (state: any) => {};
+
 export const taskSlice = createSlice({
   name: "task",
   initialState,
@@ -331,7 +333,7 @@ export const taskSlice = createSlice({
       },
     );
     builder.addCase(fetchAsyncGetTaskBoardTasks.rejected, handleError);
-    builder.addCase(fetchAsyncGetTaskBoardTasks.pending, handleLoading);
+    builder.addCase(fetchAsyncGetTaskBoardTasks.pending, handleLoadingForInit);
     builder.addCase(
       fetchAsyncGetLookBackTasks.fulfilled,
       (state, action: PayloadAction<READ_TASK[]>) => {
@@ -342,7 +344,7 @@ export const taskSlice = createSlice({
       },
     );
     builder.addCase(fetchAsyncGetLookBackTasks.rejected, handleError);
-    builder.addCase(fetchAsyncGetLookBackTasks.pending, handleLoading);
+    builder.addCase(fetchAsyncGetLookBackTasks.pending, handleLoadingForInit);
     builder.addCase(
       fetchAsyncGetUsers.fulfilled,
       (state, action: PayloadAction<USER[]>) => {
@@ -353,7 +355,7 @@ export const taskSlice = createSlice({
       },
     );
     builder.addCase(fetchAsyncGetUsers.rejected, handleError);
-    builder.addCase(fetchAsyncGetUsers.pending, handleLoading);
+    builder.addCase(fetchAsyncGetUsers.pending, handleLoadingForInit);
     builder.addCase(
       fetchAsyncGetCategory.fulfilled,
       (state, action: PayloadAction<CATEGORY[]>) => {
@@ -364,7 +366,7 @@ export const taskSlice = createSlice({
       },
     );
     builder.addCase(fetchAsyncGetCategory.rejected, handleError);
-    builder.addCase(fetchAsyncGetCategory.pending, handleLoading);
+    builder.addCase(fetchAsyncGetCategory.pending, handleLoadingForInit);
     builder.addCase(
       fetchAsyncCreateCategory.fulfilled,
       (state, action: PayloadAction<CATEGORY[]>) => {

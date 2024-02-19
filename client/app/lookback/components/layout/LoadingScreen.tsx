@@ -1,12 +1,9 @@
 import LinearProgress from "@mui/material/LinearProgress";
 import { useEffect, type ReactNode, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectTaskStatus, selectTaskMessage } from "@/slices/taskSlice";
-import {
-  selectUserGroupStatus,
-  selectUserGroupMessage,
-} from "@/slices/userGroupSlice";
-import { selectUserStatus, selectUserMessage } from "@/slices/userSlice";
+import { selectTaskStatus } from "@/slices/taskSlice";
+import { selectUserGroupStatus } from "@/slices/userGroupSlice";
+import { selectUserStatus } from "@/slices/userSlice";
 
 type Props = {
   children: ReactNode;
@@ -20,7 +17,11 @@ export const LoadingScreen = ({ children }: Props) => {
 
   useEffect(() => {
     console.log("taskStatus : " + taskStatus);
-    if (taskStatus === "succeeded" || taskStatus === "failed") {
+    if (
+      taskStatus === "succeeded" ||
+      taskStatus === "failed" ||
+      taskStatus === ""
+    ) {
       setIsLoading(false);
     } else if (taskStatus === "loading") {
       setIsLoading(true);
@@ -29,7 +30,11 @@ export const LoadingScreen = ({ children }: Props) => {
 
   useEffect(() => {
     console.log("userStatus : " + userStatus);
-    if (userGroupStatus === "succeeded" || userGroupStatus === "failed") {
+    if (
+      userGroupStatus === "succeeded" ||
+      userGroupStatus === "failed" ||
+      userGroupStatus === ""
+    ) {
       setIsLoading(false);
     } else if (userGroupStatus === "loading") {
       setIsLoading(true);
@@ -38,7 +43,11 @@ export const LoadingScreen = ({ children }: Props) => {
 
   useEffect(() => {
     console.log("userGroupStatus : " + userGroupStatus);
-    if (userStatus === "succeeded" || userStatus === "failed") {
+    if (
+      userStatus === "succeeded" ||
+      userStatus === "failed" ||
+      userStatus === ""
+    ) {
       setIsLoading(false);
     } else if (userStatus === "loading") {
       setIsLoading(true);
