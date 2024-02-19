@@ -1,6 +1,7 @@
 import { Grid } from "@mui/material";
 import Head from "next/head";
 import type { ReactNode } from "react";
+import { LoadingScreen } from "./LoadingScreen";
 import { MainPageHeader } from "./MainPageHeader";
 import { MessageBar } from "./MessageBar";
 
@@ -15,12 +16,14 @@ export const MainPageLayout = ({ children, title }: Props) => {
       <Head>
         <title>{title}</title>
       </Head>
-      <main className="text-center text-gray-600 font-serif m-6">
-        <Grid container>
-          <MainPageHeader title={title} />
-          {children}
-        </Grid>
-      </main>
+      <LoadingScreen>
+        <main className="text-center text-gray-600 font-serif m-6">
+          <Grid container>
+            <MainPageHeader title={title} />
+            {children}
+          </Grid>
+        </main>
+      </LoadingScreen>
       <MessageBar />
     </>
   );
