@@ -6,15 +6,16 @@ https://lookback-calendar.com/ <br >
 
 # 使用技術
 - Next.js
+- TypeScript
 - MUI
 - Ruby 3.1.2
-- Ruby on Rails 7.0.8
+- Ruby on Rails（APIモード） 7.0.8
 - MySQL 8.0.32
 - Nginx
 - Puma
 - AWS
   - VPC
-  - Fargate
+  - ECS Fargate
   - RDS
   - Route53
 - Docker/Docker-compose
@@ -27,17 +28,13 @@ https://lookback-calendar.com/ <br >
 
 ## Github Actions CI/CD
 - Githubへのpush時に、「Rspec」「Jest」「Rubocop」「Eslint」が自動で実行されます。
-- mainブランチへのpushでは、上記の４つが成功した場合、AWS Fargateへの自動デプロイが実行されます。
+- mainブランチへのpush時に、上記の４つが成功した場合はAWS Fargateへの自動デプロイが実行されます。
 
 # 機能一覧
-- ユーザー登録、ログイン機能(devise)
-- 投稿機能
-  - 画像投稿(refile)
-  - 位置情報検索機能(geocoder)
-- いいね機能(Ajax)
-  - ランキング機能
-- コメント機能(Ajax)
-- フォロー機能(Ajax)
-- ページネーション機能(kaminari)
-  - 無限スクロール(Ajax)
-- 検索機能(ransack)
+- ユーザー登録、ログイン機能、ログアウト機能
+- タスク一覧機能
+- 完了タスク一覧機能（カレンダー）
+- タスク作成、更新、削除機能
+- カテゴリー作成、更新、削除機能
+- 招待機能
+- レスポンス対応
