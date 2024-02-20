@@ -65,7 +65,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       UpdateEmailMailer.update_email_email(email: send_update_email_input.email).deliver_now
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
     end
 
@@ -101,7 +101,7 @@ class Api::V1::UsersController < ApplicationController
     # メールアドレスが登録済みか確認
     user = User.find_by(email: password_pre_reset_input.email)
     if user.blank?
-      logger.error "入力したメールアドレスは未登録です"
+      Rails.logger.error("入力したメールアドレスは未登録です")
       return render json: { error: "入力したメールアドレスは未登録です" }, status: :bad_request
     end
 
@@ -110,7 +110,7 @@ class Api::V1::UsersController < ApplicationController
     begin
       PasswordResetMailer.password_reset_email(email: password_pre_reset_input.email).deliver_now
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: "メールの送信に失敗しました" }, status: :internal_server_error
     end
 
@@ -121,7 +121,7 @@ class Api::V1::UsersController < ApplicationController
     password_reset_input = PasswordResetInput.new(email: params[:email], password: params[:password])
 
     unless password_reset_input.valid?
-      logger.error password_reset_input.errors.full_messages
+      Rails.logger.error(password_reset_input.errors.full_messages)
       render json: { error: password_reset_input.errors.full_messages }, status: :bad_request
       return
     end
@@ -129,15 +129,15 @@ class Api::V1::UsersController < ApplicationController
     # メールアドレスが登録済みか確認
     user = User.find_by(email: password_reset_input.email)
     if user.blank?
-      logger.error "ユーザが存在しません"
+      Rails.logger.error("ユーザが存在しません")
       return render json: { error: "ユーザが存在しません" }, status: :bad_request
     end
 
     if user.update(password: password_reset_input.password)
-      logger.info "パスワードの更新に成功"
+      Rails.logger.info("パスワードの更新に成功")
       render json: {}, status: :ok
     else
-      logger.info user.errors.full_messages
+      Rails.logger.info(user.errors.full_messages)
       render json: { error: user.errors.full_messages }, status: :internal_server_error
     end
   end
@@ -145,7 +145,7 @@ class Api::V1::UsersController < ApplicationController
   def update_current_user_email
     update_current_user_email_input = UpdateCurrentUserEmailInput.new(email: params[:email])
     unless update_current_user_email_input.valid?
-      logger.error update_current_user_email_input.errors.full_messages
+      Rails.logger.error(update_current_user_email_input.errors.full_messages)
       render json: { error: update_current_user_email_input.errors.full_messages }, status: :bad_request
       return
     end
@@ -184,7 +184,7 @@ class Api::V1::UsersController < ApplicationController
     update_current_user_name_input = UpdateCurrentUserNameInput.new(username: params[:username])
 
     unless update_current_user_name_input.valid?
-      logger.error update_current_user_name_input.errors.full_messages
+      Rails.logger.error(update_current_user_name_input.errors.full_messages)
       render json: { error: update_current_user_name_input.errors.full_messages }, status: :bad_request
       return
     end
@@ -223,7 +223,7 @@ class Api::V1::UsersController < ApplicationController
     update_current_user_password_input = UpdateCurrentUserPasswordInput.new(current_password: params[:current_password], new_password: params[:new_password])
 
     unless update_current_user_password_input.valid?
-      logger.error update_current_user_password_input.errors.full_messages
+      Rails.logger.error(update_current_user_password_input.errors.full_messages)
       render json: { error: update_current_user_password_input.errors.full_messages }, status: :bad_request
       return
     end

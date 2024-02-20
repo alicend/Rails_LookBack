@@ -41,7 +41,7 @@ module JwtToken
     secret_key = Settings.session_secret_key
     JWT.decode(token_string, secret_key, true, { algorithm: "HS256" })
   rescue JWT::DecodeError => e
-    Rails.logger.error e.message
+    Rails.logger.error(e.message)
     nil
   end
 end

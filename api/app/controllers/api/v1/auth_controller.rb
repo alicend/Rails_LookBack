@@ -18,7 +18,7 @@ class Api::V1::AuthController < ApplicationController
     begin
       AuthMailer.sign_up_email(email: user_pre_sigh_up_input.email).deliver_now
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
     end
 
@@ -54,7 +54,7 @@ class Api::V1::AuthController < ApplicationController
     begin
       InviteMailer.invite_email(email: invite_email_input.email, user_group_id: login_user_group.id).deliver_now
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: "メールの送信に失敗しました: #{e.message}" }, status: :internal_server_error
     end
 
@@ -73,7 +73,7 @@ class Api::V1::AuthController < ApplicationController
     # 新しいUserGroupを作成
     user_group = UserGroup.new(name: user_sigh_up_input.user_group)
     unless user_group.save
-      logger.error user_group.errors.full_messages
+      Rails.logger.error(user_group.errors.full_messages)
       return render json: { error: user_group.errors.full_messages }, status: :internal_server_error
     end
 
@@ -85,7 +85,7 @@ class Api::V1::AuthController < ApplicationController
       user_group_id: user_group.id,
     )
     unless user.save
-      logger.error user.errors.full_messages
+      Rails.logger.error(user.errors.full_messages)
       return render json: { error: user.errors.full_messages }, status: :internal_server_error
     end
     render json: { user_id: user.id, message: "Successfully created user" }, status: :ok if user.save
@@ -108,7 +108,7 @@ class Api::V1::AuthController < ApplicationController
       user_group_id: user_sigh_up_input.user_group,
     )
     unless user.save
-      logger.error user.errors.full_messages
+      Rails.logger.error(user.errors.full_messages)
       return render json: { error: user.errors.full_messages }, status: :internal_server_error
     end
     render json: { user_id: user.id, message: "Successfully created user" }, status: :ok if user.save
@@ -139,7 +139,7 @@ class Api::V1::AuthController < ApplicationController
       cookies[:access_token] = { value: token, httponly: true, secure: true }
       cookies[:guest_login] = { value: "false", httponly: false, secure: true }
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: e.message }, status: :bad_request
     end
 
@@ -162,7 +162,7 @@ class Api::V1::AuthController < ApplicationController
       cookies[:access_token] = { value: token, httponly: true, secure: true }
       cookies[:guest_login] = { value: "true", httponly: false, secure: true }
     rescue => e
-      logger.error e.message
+      Rails.logger.error(e.message)
       return render json: { error: e.message }, status: :bad_request
     end
 
@@ -250,11 +250,11 @@ class Api::V1::AuthController < ApplicationController
           },
         ])
       end
-      Rails.logger.info "ゲストユーザーの作成に成功"
+      Rails.logger.info("ゲストユーザーの作成に成功")
       users.first
     rescue e
       # エラーログ出力
-      Rails.logger.error "エラー: #{e.message}"
+      Rails.logger.error("エラー: #{e.message}")
     end
 
     def delete_guest_user
@@ -277,7 +277,7 @@ class Api::V1::AuthController < ApplicationController
 
       true
     rescue => e
-      Rails.logger.error "Error in deleting guest users: #{e.message}"
+      Rails.logger.error("Error in deleting guest users: #{e.message}")
       # トランザクションのロールバックを明示的に指示
       raise ActiveRecord::Rollback
     end
